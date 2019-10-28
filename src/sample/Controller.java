@@ -1,4 +1,4 @@
-package main.sample;
+package sample;
 
 public class Controller {
 }
