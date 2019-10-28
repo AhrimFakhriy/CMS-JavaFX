@@ -1,4 +1,5 @@
 #root{
+    -fx-background-color: transparent;
     -fx-background-image: url("/res/images/background.png");
     -fx-background-repeat: no-repeat;
     -fx-border-color: black;

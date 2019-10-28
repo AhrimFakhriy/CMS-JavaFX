@@ -14,23 +14,21 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="root" prefHeight="533.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.login.LoginController">
-   <children>
       <Pane layoutX="50.0" layoutY="50.0" prefHeight="433.0" prefWidth="700.0" style="-fx-background-color: #ffffff; -fx-background-radius: 40px;">
          <effect>
             <DropShadow />
          </effect>
-         <children>
-            <Label layoutX="158.0" layoutY="14.0" text="AZIMOS CHALET" textAlignment="CENTER">
+            <Label fx:id="labelChaletName" layoutX="158.0" layoutY="63.0" text="AZIMOS CHALET" textAlignment="CENTER">
                <font>
                   <Font name="Yu Gothic Bold" size="48.0" />
                </font>
             </Label>
-            <JFXTextField labelFloat="true" layoutX="250.0" layoutY="201.0" prefHeight="30.0" prefWidth="220.0" promptText="Username">
+            <JFXTextField fx:id="fieldName" labelFloat="true" layoutX="250.0" layoutY="201.0" prefHeight="30.0" prefWidth="220.0" promptText="Username">
                <font>
                   <Font size="15.0" />
                </font>
             </JFXTextField>
-            <JFXPasswordField labelFloat="true" layoutX="250.0" layoutY="256.0" prefHeight="30.0" prefWidth="220.0" promptText="Password">
+            <JFXPasswordField fx:id="fieldPassword" labelFloat="true" layoutX="250.0" layoutY="256.0" prefHeight="30.0" prefWidth="220.0" promptText="Password">
                <font>
                   <Font size="15.0" />
                </font>
@@ -44,17 +42,13 @@
                </effect>
             </JFXButton>
             <ImageView fx:id="userImg" fitHeight="32.0" fitWidth="32.0" layoutX="206.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@/res/images/user.png" />
-               </image>
                <effect>
                   <ColorAdjust brightness="-1.0" />
                </effect>
             </ImageView>
             <ImageView fx:id="lockImg" fitHeight="32.0" fitWidth="32.0" layoutX="206.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@/res/images/lock.png" />
-               </image>
                <effect>
                   <ColorAdjust brightness="-1.0" />
                </effect>
@@ -64,7 +58,6 @@
                   <Font size="13.0" />
                </font>
             </JFXCheckBox>
-         </children>
       </Pane>
       <JFXButton fx:id="closeButton" layoutX="768.0" layoutY="3.0" mnemonicParsing="false" onAction="#onActionClose" prefHeight="25.0" prefWidth="25.0" text="X">
          <font>
@@ -74,7 +67,6 @@
             <DropShadow color="WHITE" />
          </effect>
       </JFXButton>
-   </children>
    <effect>
       <DropShadow />
    </effect>
