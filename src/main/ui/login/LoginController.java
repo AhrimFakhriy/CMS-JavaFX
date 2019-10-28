@@ -1,11 +1,19 @@
 package main.ui.login;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 public class LoginController {
+
+    @FXML private Label labelChaletName;
+
+    @FXML private JFXTextField fieldName;
+    @FXML private JFXPasswordField fieldPassword;
 
     @FXML private ImageView userImg;
     @FXML private ImageView lockImg;
@@ -25,15 +33,15 @@ public class LoginController {
         }
     }
 
-    public JFXButton getLogInButton() {
+    JFXButton getLogInButton() {
         return logInButton;
     }
 
-    public ImageView getUserImg() {
+    ImageView getUserImg() {
         return userImg;
     }
 
-    public ImageView getLockImg() {
+    ImageView getLockImg() {
         return lockImg;
     }
 }
