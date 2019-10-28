@@ -1,0 +1,14 @@
+#root{
+    -fx-background-image: url("/res/images/background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-border-color: black;
+}
+
+#btn_login{
+    -fx-background-color: #5289FF;
+    -fx-background-radius: 50px;
+}
+
+#btn_login:hover{
+    -fx-background-color: #76a2ff;
+}
