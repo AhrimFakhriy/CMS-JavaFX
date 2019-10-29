@@ -4,9 +4,7 @@ import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
 import main.model.rentable.Room;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static main.utils.Utils.DATA_FOLDER;
@@ -24,8 +22,46 @@ public class RentableRepository {
         roomTypes = new HashSet<>();
     }
 
+    public void saveHalls() { saveData(Rentable.Type.HALL); }
+    public void saveRooms() { saveData(Rentable.Type.ROOM); }
     public void loadHalls() { getData(Rentable.Type.HALL); }
     public void loadRooms() { getData(Rentable.Type.ROOM); }
+
+    private void saveData(Rentable.Type rentable) {
+        try {
+            String filename;
+
+            if(rentable == Rentable.Type.ROOM)
+                filename = "rooms.dat";
+            else
+                filename = "halls.dat";
+
+            PrintWriter pw = new PrintWriter(
+                    new BufferedWriter(new FileWriter(DATA_FOLDER + File.separator + filename))
+            );
+
+            switch (rentable) {
+                case ROOM: {
+                    for (Room r : rooms)
+                        pw.println(r.toFile());
+
+                    break;
+                }
+                case HALL: {
+                    for (Hall h : halls)
+                        pw.println(h.toFile());
+
+                    break;
+                }
+            }
+
+            pw.close();
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void getData(Rentable.Type rentable) {
         try {

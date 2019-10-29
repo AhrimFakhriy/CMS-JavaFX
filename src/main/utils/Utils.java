@@ -3,6 +3,8 @@ package main.utils;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.time.format.DateTimeFormatter;
+
 public class Utils {
     public static final String CHALET_NAME = "Azimos Chalet";
     public static final String TICKET_SERVICE_LOCATION = "Pulau Perhentian";
@@ -11,6 +13,8 @@ public class Utils {
     public static final String RESOURCE = "src";
     public static final String DATA_FOLDER = "src/data";
     public static final String LOG_FOLDER = "src/logs";
+
+    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy");
 
     public static final String[] FILE_NAMES = {
             "rooms",
