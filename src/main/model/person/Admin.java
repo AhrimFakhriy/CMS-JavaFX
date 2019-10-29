@@ -1,38 +1,23 @@
 package main.model.person;
 
+import main.model.account.Account;
+
 public class Admin extends Person {
-    private String userID, password;
+    private Account account;
 
     public Admin() {
-        super("ADMIN", "000");
-        userID = "Admin";
-        password = "fw/jYp4ahvnQpatsG8i3Lg=="; // PLAINTEXT: Admin
+        super("Hasyirin Fakhriy", "010-905 4610");
+        account = new Account("Admin", "fw/jYp4ahvnQpatsG8i3Lg==");
     }
 
     public Admin(String name, String phoneNum, String userID, String password) {
         super(name, phoneNum);
-        this.userID = userID;
-        this.password = password;
+        account = new Account(userID, password);
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public String getPassword() {
-        return password;
-    }
+    public Account getAccount() { return account; }
 
     public boolean logIn(String id, String pass) {
-        return id.equalsIgnoreCase(userID) && pass.equalsIgnoreCase(password);
-    }
-
-    @Override
-    public String toString() {
-        return (
-            super.toString() +
-            "\nUser ID: " + userID +
-            "\nPassword: " + password
-        );
+        return id.equalsIgnoreCase(account.getUserID()) && pass.equalsIgnoreCase(account.getPassword());
     }
 }

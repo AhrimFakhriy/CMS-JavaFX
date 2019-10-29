@@ -1,18 +1,18 @@
 package main.utils;
 
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 public class Utils {
     public static final String CHALET_NAME = "Azimos Chalet";
     public static final String TICKET_SERVICE_LOCATION = "Pulau Perhentian";
     public static final String MALAYSIA = "MALAYSIA";
 
     public static final String RESOURCE = "src";
-    public static final String DATA_FOLDER = "data";
-    public static final String LOG_FOLDER = "logs";
+    public static final String DATA_FOLDER = "src/data";
+    public static final String LOG_FOLDER = "src/logs";
 
-    public static final String PATH_TO_DATA_FOLDER = RESOURCE + "/" + DATA_FOLDER;
-    public static final String PATH_TO_LOG_FOLDER = RESOURCE + "/" + LOG_FOLDER;
-
-    private static final String[] FILE_NAMES = {
+    public static final String[] FILE_NAMES = {
             "rooms",
             "removed_rooms",
             "halls",
@@ -27,8 +27,16 @@ public class Utils {
             "ticket_records"
     };
 
+    public static void setLoginStage(Stage stage) {
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle("Log In");
+        stage.centerOnScreen();
+        stage.sizeToScene();
+    }
+
     // STATES
-    private static final String[] STATES = {
+    public static final String[] STATES = {
             "Johor", // 0
             "Kedah", // 1
             "Kelantan", // 2
@@ -45,7 +53,7 @@ public class Utils {
             "Wilayah Persekutuan" // 13
     };
 
-    private static final String[][] DISTRICTS = {
+    public static final String[][] DISTRICTS = {
             {"Batu Pahat", "Johor Bahru", "Kluang", "Kota Tinggi", "Kulai", "Mersing", "Muar", "Pontian", "Segamat", "Tangkak", "Others"},
             {"Baling", "Bandar Baharu", "Kota Setar", "Kuala Muda", "Kubang Pasu", "Kulim", "Langkawi", "Padang Terap", "Pendang", "Pokok Sena", "Sik", "Yan", "Others"},
             {"Bachok", "Gua Musang", "Jeli", "Kota Bharu", "Kuala Krai", "Machang", "Pasir Mas", "Pasir Puteh", "Tanah Merah", "Tumpat", "Others"},
