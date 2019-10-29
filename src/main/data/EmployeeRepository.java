@@ -1,16 +1,20 @@
 package main.data;
 
+import main.model.account.Account;
 import main.model.person.Employee;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.StringTokenizer;
+
+import static main.utils.Utils.DATA_FOLDER;
 
 public class EmployeeRepository {
     private static EmployeeRepository instance = null;
@@ -36,6 +40,55 @@ public class EmployeeRepository {
         }
 
         return instance;
+    }
+
+    public void saveEmployees() {
+        try {
+            FileWriter fw = new FileWriter(DATA_FOLDER + File.separator + "employees.dat");
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            for(Employee e : employees) {
+                pw.println(e.toFile());
+            }
+
+            pw.close();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadEmployees() {
+        try {
+            FileReader fr = new FileReader(DATA_FOLDER + File.separator + "employees.dat");
+            BufferedReader br = new BufferedReader(fr);
+
+            employees.clear();
+
+            for(String data = br.readLine(); data != null; data = br.readLine()) {
+                StringTokenizer token = new StringTokenizer(data, ";");
+                String name = token.nextToken();
+                String phone = token.nextToken();
+                String rank = token.nextToken();
+                double salary = Double.parseDouble(token.nextToken());
+                String userID = token.nextToken();
+                String password = token.nextToken();
+
+                Employee emp = new Employee(name, phone, rank, salary);
+
+                if(!userID.equalsIgnoreCase("null")) {
+                    emp.setAccount(new Account(userID, password));
+                }
+
+                employees.add(emp);
+            }
+
+            br.close();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // ENCRYPTION METHODS [AES]

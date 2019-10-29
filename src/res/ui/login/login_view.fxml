@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="root" prefHeight="533.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.login.LoginController">
+<AnchorPane id="root" prefHeight="533.0" prefWidth="800.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.login.LoginController">
       <Pane layoutX="50.0" layoutY="50.0" prefHeight="433.0" prefWidth="700.0" style="-fx-background-color: #ffffff; -fx-background-radius: 40px;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
          <effect>
             <DropShadow />
@@ -33,7 +33,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </JFXPasswordField>
-            <JFXButton id="btn_login" fx:id="logInButton" buttonType="RAISED" defaultButton="true" layoutX="276.0" layoutY="361.0" mnemonicParsing="false" onAction="#onAttemptLogIn" prefHeight="45.0" prefWidth="150.0" text="Log In">
+            <JFXButton id="btn_login" fx:id="logInButton" buttonType="RAISED" defaultButton="true" layoutX="276.0" layoutY="361.0" mnemonicParsing="false" onAction="#onAttemptLogIn" prefHeight="45.0" prefWidth="150.0" styleClass="btn_login" stylesheets="@style.css" text="Log In">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

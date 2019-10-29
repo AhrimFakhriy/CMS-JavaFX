@@ -6,9 +6,11 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,18 +30,30 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    @FXML private Label labelMenu;
     @FXML private Label labelName;
     @FXML private Label labelRank;
 
     @FXML private JFXButton logOutButton;
 
+    @FXML private StackPane stackPane;
+    @FXML private BorderPane panelMain;
     @FXML private Pane opaquePane;
     @FXML private HBox drawerBox;
     @FXML private GridPane drawerPane;
     @FXML private Pane fillerPane;
     @FXML private VBox toolbarVBox;
 
+    @FXML private PieChart roomPieChart;
+    @FXML private PieChart hallPieChart;
+
     @FXML private JFXHamburger hamburger;
+
+    @FXML private JFXButton buttonBookRoom;
+    @FXML private JFXButton buttonBookHall;
+    @FXML private JFXButton buttonBookTicket;
+    @FXML private JFXButton buttonCustomerDetails;
+    @FXML private JFXButton buttonAdminMenu;
 
     private int MENU_STATUS = 2;
 
@@ -48,10 +62,62 @@ public class MainController implements Initializable {
         drawerBox.setVisible(false);
         animateDrawerClose();
 
-        loadUserSettings();
+        loadPieCharts();
+        loadSettings();
         drawerOnClick();
 
         onActionLogOut();
+    }
+
+    private void loadPieCharts() {
+        PieChart.Data bookedRoom = new PieChart.Data("Booked", 50);
+        PieChart.Data unbookedRoom = new PieChart.Data("Unbooked",  70);
+        roomPieChart.getData().addAll(bookedRoom, unbookedRoom);
+
+        PieChart.Data bookedHall = new PieChart.Data("Booked", 5);
+        PieChart.Data unbookedHall = new PieChart.Data("Unbooked", 6);
+        hallPieChart.getData().addAll(bookedHall, unbookedHall);
+    }
+
+    @FXML private void onAction(ActionEvent event) {
+        if(event.getSource().equals(buttonBookRoom)) {
+            System.out.println("Booking Room");
+        }
+
+        if(event.getSource().equals(buttonBookHall)) {
+            System.out.println("Booking Hall");
+        }
+
+        if(event.getSource().equals(buttonBookTicket)) {
+            System.out.println("Booking Ticket");
+        }
+
+        if(event.getSource().equals(buttonCustomerDetails)) {
+            System.out.println("Customer Details");
+        }
+
+        if(event.getSource().equals(buttonAdminMenu)) {
+            System.out.println("Admin Menu");
+        }
+    }
+
+    private void loadSettings() {
+        if(!Settings.getInstance().isTicketServiceEnabled())
+            buttonBookTicket.setDisable(true);
+
+        Person currentUser = Settings.getInstance().getCurrentUser().get();
+        labelName.setText(currentUser.getName());
+
+        if(currentUser instanceof Admin)
+            labelRank.setText("Administrator");
+        else {
+            if(!((Employee) currentUser).getRank().contains("Manager"))
+                drawerPane.getChildren().remove(buttonAdminMenu);
+
+            labelRank.setText(((Employee) currentUser).getRank());
+        }
+        HBox.setHgrow(toolbarVBox, Priority.ALWAYS);
+        HBox.setHgrow(fillerPane, Priority.ALWAYS);
     }
 
     private void animateDrawerClose() {
@@ -122,18 +188,5 @@ public class MainController implements Initializable {
                 e.printStackTrace();
             }
         });
-    }
-
-    private void loadUserSettings() {
-        Person currentUser = Settings.getInstance().getCurrentUser().get();
-
-        labelName.setText(currentUser.getName());
-        if(currentUser instanceof Admin)
-            labelRank.setText("Administrator");
-        else
-            labelRank.setText(((Employee) currentUser).getRank());
-
-        HBox.setHgrow(toolbarVBox, Priority.ALWAYS);
-        HBox.setHgrow(fillerPane, Priority.ALWAYS);
     }
 }

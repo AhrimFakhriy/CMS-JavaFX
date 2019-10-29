@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
 
         if(credential.isNotEmpty()) {
             fieldName.setText(credential.getID());
-            fieldPassword.setText(credential.getPassword());
+            fieldPassword.setText(EmployeeRepository.getInstance().decrypt(credential.getPassword()));
             rememberButton.setSelected(true);
         }
     }
@@ -88,6 +88,13 @@ public class LoginController implements Initializable {
 
            if(loggedUser != null) {
                settings.setCurrentUser(loggedUser);
+
+               if(rememberButton.isSelected()) {
+                   Settings.getInstance().saveCredentials(id, password);
+               } else {
+                   Settings.getInstance().saveCredentials("null", "null");
+               }
+
                MainView main = new MainView();
 
                main.start(new Stage());

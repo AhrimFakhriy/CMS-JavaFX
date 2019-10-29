@@ -30,7 +30,7 @@ public class MainView extends Application {
         BorderPane root = loader.load();
 
         Scene scene = new Scene(root);
-        //scene.getStylesheets().addAll(getClass().getResource("/res/ui/main/style.css").toExternalForm());
+        scene.getStylesheets().addAll(getClass().getResource("/res/ui/main/style.css").toExternalForm());
 
         primaryStage.setResizable(true);
         primaryStage.setTitle("Chalet Management System");

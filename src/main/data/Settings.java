@@ -115,6 +115,21 @@ public class Settings {
         return credential;
     }
 
+    public void saveCredentials(String name, String password) {
+        try {
+            FileWriter fw = new FileWriter(DATA_FOLDER + File.separator + "remember_me.dat");
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            pw.print(name + ";" + password);
+
+            pw.close();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setCurrentUser(SimpleObjectProperty<Person> currentUser) { this.currentUser = currentUser; }
     public void setChaletName(String chaletName) { this.chaletName = chaletName; }
     public void setTicketServiceLoc(String ticketServiceLoc) { this.ticketServiceLoc = ticketServiceLoc; }

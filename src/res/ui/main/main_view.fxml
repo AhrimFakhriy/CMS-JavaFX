@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.DropShadow?>
@@ -14,10 +15,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <VBox fx:id="toolbarVBox" prefHeight="0.0" prefWidth="100.0">
@@ -34,81 +34,82 @@
       </ToolBar>
    </bottom>
    <top>
-       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+       <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #7660ff;" BorderPane.alignment="CENTER">
            <BorderPane.margin>
-               <Insets/>
+               <Insets />
            </BorderPane.margin>
            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="383.0">
-               <JFXHamburger fx:id="hamburger" prefHeight="50.0" prefWidth="50.0"/>
-               <Label prefHeight="61.0" prefWidth="319.0" text="MAIN MENU">
+               <JFXHamburger fx:id="hamburger" prefHeight="50.0" prefWidth="50.0" />
+               <Label fx:id="labelMenu" prefHeight="61.0" prefWidth="319.0" text="MAIN MENU">
                    <padding>
-                       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                    </padding>
                    <font>
-                       <Font name="System Bold" size="15.0"/>
+                       <Font name="System Bold" size="15.0" />
                    </font>
                </Label>
            </HBox>
+         <effect>
+            <DropShadow />
+         </effect>
        </ToolBar>
    </top>
    <center>
-       <StackPane BorderPane.alignment="CENTER">
-           <BorderPane>
-              <center>
-                  <Circle fill="DODGERBLUE" radius="100.0" stroke="BLACK" strokeType="INSIDE"
-                          BorderPane.alignment="CENTER"/>
-              </center>
-              <right>
-                  <Circle fill="DODGERBLUE" radius="100.0" stroke="BLACK" strokeType="INSIDE"
-                          BorderPane.alignment="CENTER"/>
-              </right>
-              <left>
-                  <Circle fill="DODGERBLUE" radius="100.0" stroke="BLACK" strokeType="INSIDE"
-                          BorderPane.alignment="CENTER"/>
-              </left>
+       <StackPane fx:id="stackPane" BorderPane.alignment="CENTER">
+           <BorderPane fx:id="panelMain">
+            <center>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <VBox alignment="CENTER">
+                        <PieChart fx:id="roomPieChart" title="Available Rooms"/>
+                    </VBox>
+                    <VBox alignment="CENTER">
+                        <PieChart fx:id="hallPieChart" title="Available Halls"/>
+                    </VBox>
+                </HBox>
+            </center>
            </BorderPane>
-           <HBox fx:id="drawerBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-               <GridPane fx:id="drawerPane" alignment="CENTER" prefHeight="495.0" prefWidth="240.0"
-                         style="-fx-background-color: #FFFFFF; -fx-opacity: 1;" vgap="10.0">
+           <HBox fx:id="drawerBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="visibility: false;">
+               <GridPane fx:id="drawerPane" alignment="CENTER" prefHeight="495.0" prefWidth="240.0" style="-fx-background-color: #FFFFFF; -fx-opacity: 1;" vgap="10.0">
                    <columnConstraints>
-                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                    </columnConstraints>
                    <rowConstraints>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                    </rowConstraints>
-                   <JFXButton mnemonicParsing="false"
-                              style="-fx-background-color: #eeeeee; -fx-max-height: infinity; -fx-max-width: infinity; -fx-background-radius: 0px;"
-                              text="Button"/>
-                   <JFXButton mnemonicParsing="false"
-                              style="-fx-background-color: #eeeeee; -fx-max-height: infinity; -fx-max-width: infinity; -fx-background-radius: 0px;"
-                              text="Button" GridPane.rowIndex="1"/>
-                   <JFXButton mnemonicParsing="false"
-                              style="-fx-background-color: #eeeeee; -fx-max-height: infinity; -fx-max-width: infinity; -fx-background-radius: 0px;"
-                              text="Button" GridPane.rowIndex="2"/>
-                   <JFXButton mnemonicParsing="false"
-                              style="-fx-background-color: #eeeeee; -fx-max-height: infinity; -fx-max-width: infinity; -fx-background-radius: 0px;"
-                              text="Button" GridPane.rowIndex="3"/>
-                   <JFXButton mnemonicParsing="false"
-                              style="-fx-background-color: #eeeeee; -fx-max-height: infinity; -fx-max-width: infinity; -fx-background-radius: 0px;"
-                              text="Button" GridPane.rowIndex="4"/>
-                   <JFXButton fx:id="logOutButton" alignment="CENTER" contentDisplay="CENTER"
-                              mnemonicParsing="false"
-                              style="-fx-background-color: #76a2ff; -fx-max-height: infinity; -fx-max-width: infinity; -fx-background-radius: 0px;"
-                              text="Log Out" GridPane.rowIndex="7">
+                   <JFXButton id="drawer_btn" fx:id="buttonBookRoom" mnemonicParsing="false" onAction="#onAction" styleClass="drawer_btn" stylesheets="@style.css" text="Room Booking">
+                  <font>
+                     <Font name="SansSerif Bold" size="15.0" />
+                  </font></JFXButton>
+                   <JFXButton id="drawer_btn" fx:id="buttonBookHall" mnemonicParsing="false" onAction="#onAction" styleClass="drawer_btn" stylesheets="@style.css" text="Hall Booking" GridPane.rowIndex="1">
+                  <font>
+                     <Font name="SansSerif Bold" size="15.0" />
+                  </font></JFXButton>
+                   <JFXButton id="drawer_btn" fx:id="buttonBookTicket" mnemonicParsing="false" onAction="#onAction" styleClass="drawer_btn" stylesheets="@style.css" text="Ticket Booking" GridPane.rowIndex="2">
+                  <font>
+                     <Font name="SansSerif Bold" size="15.0" />
+                  </font></JFXButton>
+                   <JFXButton id="drawer_btn" fx:id="buttonCustomerDetails" mnemonicParsing="false" onAction="#onAction" styleClass="drawer_btn" stylesheets="@style.css" text="Customer Details" GridPane.rowIndex="3">
+                  <font>
+                     <Font name="SansSerif Bold" size="15.0" />
+                  </font></JFXButton>
+                   <JFXButton id="drawer_btn" fx:id="buttonAdminMenu" mnemonicParsing="false" onAction="#onAction" styleClass="drawer_btn" stylesheets="@style.css" text="Admin Menu" GridPane.rowIndex="4">
+                  <font>
+                     <Font name="SansSerif Bold" size="15.0" />
+                  </font></JFXButton>
+                   <JFXButton id="logout_btn" fx:id="logOutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" styleClass="logout_btn" stylesheets="@style.css" text="Log Out" GridPane.rowIndex="7">
                        <font>
-                           <Font name="System Bold" size="13.0"/>
+                           <Font name="SansSerif Bold" size="15.0" />
                        </font>
                    </JFXButton>
                </GridPane>
-               <Pane fx:id="opaquePane" opacity="0.65" prefHeight="200.0" prefWidth="200.0"
-                     style="-fx-background-color: #aaaaaa;" HBox.hgrow="ALWAYS"/>
+               <Pane fx:id="opaquePane" opacity="0.65" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #aaaaaa;" HBox.hgrow="ALWAYS" />
            </HBox>
        </StackPane>
    </center>
