@@ -2,9 +2,7 @@ package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import main.data.EmployeeRepository;
-import main.data.RentableRepository;
-import main.data.Settings;
+import main.data.*;
 import main.ui.login.LoginView;
 
 public class CMSApp extends Application {
@@ -18,6 +16,12 @@ public class CMSApp extends Application {
 
         RentableRepository.getInstance().loadHalls();
         RentableRepository.getInstance().loadRooms();
+
+        CustomerRepository.getInstance().loadCustomers();
+
+        RecordRepository.getInstance().loadRecords();
+        RecordRepository.getInstance().loadOldRecords();
+        RecordRepository.getInstance().loadTicketRecords();
 
         LoginView loginView = new LoginView();
         loginView.start(primaryStage);

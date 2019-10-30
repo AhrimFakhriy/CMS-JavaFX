@@ -1,0 +1,106 @@
+* {
+    -primary-light-color: #81D4FA;
+    -primary-dark-color: #03A9F4;
+    -secondary-light-color: #B39DDB;
+    -secondary-dark-color: #673AB7;
+    -accent-light-color: #FFCC80;
+    -accent-dark-color: #FF9800;
+}
+
+// MAIN
+#loginpane {
+    -fx-background-color: transparent;
+    -fx-background-image: url("/res/images/background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-border-color: black;
+}
+
+#top_toolbar {
+    -fx-background-color: -primary-dark-color;
+}
+
+#pane {
+    -fx-background-color: -primary-light-color;
+}
+
+#hamburger_menu {
+    -fx-background-color: white;
+}
+
+#hamburger_menu_opacity {
+    -fx-background-color: silver;
+    -fx-opacity: 0.65;
+}
+
+#bottom_toolbar { }
+
+// BUTTONS
+
+#btn {
+    -fx-background-color: -accent-dark-color;
+}
+
+#btn:hover {
+    -fx-background-color: -accent-light-color;
+}
+
+#drawer_btn {
+    -fx-background-radius: 0 15 15 0;
+    -fx-alignment: BASELINE_LEFT;
+    -fx-margin: 0 5 5 5;
+    -fx-padding: 0 0 0 20;
+}
+
+#drawer_btn:hover {
+    -fx-background-color: -accent-light-color;
+}
+
+#logout_btn {
+    -fx-background-color: silver;
+}
+
+#logout_btn:hover {
+    -fx-background-color: -accent-light-color;
+}
+
+#checkbox {
+    -jfx-checked-color: -accent-dark-color;
+}
+
+#toggle {
+    -jfx-toggle-color: -accent-dark-color;
+}
+
+#toggle:hover {
+    -fx-background-color: -accent-light-color;
+}
+
+// ETC
+.fullsize {
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+}
+
+.no-radius {
+    -fx-background-radius: 0;
+}
+
+.tiny-radius {
+    -fx-background-radius: 5;
+}
+
+.semi-radius {
+    -fx-background-radius: 20;
+}
+
+.perfect-radius {
+    -fx-background-radius: 50;
+}
+
+.selected_menu {
+    -fx-background-color: -accent-dark-color;
+}
+
+.selected_menu:hover {
+    -fx-background-color: -accent-dark-color !important;
+}

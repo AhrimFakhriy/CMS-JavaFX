@@ -32,6 +32,7 @@ public class RecordRepository {
     private RecordRepository() {
         records = new LinkedList<>();
         oldRecords = new LinkedList<>();
+        ticketRecords = new LinkedList<>();
         rentableRepository = RentableRepository.getInstance();
     }
 
@@ -183,7 +184,7 @@ public class RecordRepository {
     public LinkedList<RentableRecord> getOldRecords() { return oldRecords; }
     public LinkedList<TicketRecord> getTicketRecords() { return ticketRecords; }
 
-    private RecordRepository getInstance() {
+    public static RecordRepository getInstance() {
         if(instance == null) {
             synchronized (RecordRepository.class) {
                 if(instance == null) {

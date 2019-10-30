@@ -16,7 +16,7 @@ public class CustomerRepository {
 
     private CustomerRepository() { customers = new ArrayList<>(); }
 
-    public CustomerRepository getInstance() {
+    public static CustomerRepository getInstance() {
         if(instance == null) {
             synchronized (CustomerRepository.class) {
                 if(instance == null) {

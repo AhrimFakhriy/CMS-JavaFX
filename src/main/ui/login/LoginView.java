@@ -21,7 +21,7 @@ public class LoginView extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 800, 533);
-        scene.getStylesheets().addAll(getClass().getResource("/res/ui/login/style.css").toExternalForm());
+        scene.getStylesheets().addAll(getClass().getResource("/res/styles/style.css").toExternalForm());
 
         stage = primaryStage;
         stage.setScene(scene);
