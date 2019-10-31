@@ -50,7 +50,7 @@
        </ToolBar>
    </top>
    <center>
-       <StackPane id="main_window" fx:id="stackPane" styleClass="main_window" stylesheets="@../../styles/style.css">
+       <StackPane id="main_window" fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../styles/style.css">
            <BorderPane fx:id="panelMain">
             <center>
                 <HBox fx:id="mainPane" alignment="CENTER" style="-fx-background-color: white;">
@@ -138,6 +138,10 @@
                <InnerShadow radius="4.75" width="0.0" />
             </effect>
            </HBox>
+         <styleClass>
+            <String fx:value="main_window" />
+            <String fx:value="fullsize" />
+         </styleClass>
        </StackPane>
    </center>
 </BorderPane>

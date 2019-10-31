@@ -15,17 +15,14 @@
     -fx-border-color: black;
 }
 
-#main_window {
-    -fx-border-color: black;
-    -fx-border-width: 1px 0px 1px 0px;
-}
-
 #bookingpane {
-    -fx-background-color: white;
+    -fx-background-color: silver;
 }
 
 #top_toolbar {
     -fx-background-color: -primary-dark-color;
+    -fx-border-width: 0 0 0.8 0;
+    -fx-border-color: black;
 }
 
 #pane {
@@ -41,7 +38,10 @@
     -fx-opacity: 0.65;
 }
 
-#bottom_toolbar { }
+#bottom_toolbar {
+    -fx-border-width: 0.8 0 0 0;
+    -fx-border-color: black;
+}
 
 // BUTTONS
 
@@ -50,6 +50,14 @@
 }
 
 #btn:hover {
+    -fx-background-color: -accent-light-color;
+}
+
+#btn-no-background {
+    -jfx-rippler-fill: -accent-dark-color;
+}
+
+#btn-no-background:hover {
     -fx-background-color: -accent-light-color;
 }
 
@@ -83,6 +91,8 @@
 
 #toggle {
     -jfx-toggle-color: -secondary-dark-color;
+    -fx-border-color: -secondary-light-color;
+    -fx-border-radius: 5px;
 }
 
 #toggle:hover {
@@ -106,8 +116,16 @@
     -fx-background-radius: 0 0 20 0;
     -fx-border-color: gray;
     -fx-border-radius: 0 0 20 0;
-    -fx-border-width:  0 1 1 0;
+    -fx-border-width:  0 0.8 0.8 0;
 }
+
+.booking-bottom-pane {
+    -fx-background-radius: 0 20 0 0;
+    -fx-border-color: gray;
+    -fx-border-radius: 0 20 0 0;
+    -fx-border-width:  0.8 0.8 0 0;
+}
+
 .no-radius {
     -fx-background-radius: 0;
 }
