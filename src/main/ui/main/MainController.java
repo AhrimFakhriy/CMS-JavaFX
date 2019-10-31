@@ -34,7 +34,7 @@ public class MainController implements Initializable {
         MENU_ADMIN
     }
 
-    private class SubMenu {
+    private static class SubMenu {
         Parent root;
 
         SubMenu(URL url) {
@@ -244,7 +244,7 @@ public class MainController implements Initializable {
         rotateTransition.setFromAngle(0);
         rotateTransition.setToAngle(90);
 
-        FadeTransition opaquePaneTransition = new FadeTransition(Duration.millis(500), opaquePane);
+        FadeTransition opaquePaneTransition = new FadeTransition(Duration.seconds(0.1), opaquePane);
         opaquePaneTransition.setFromValue(0.0);
         opaquePaneTransition.setToValue(0.65);
 
