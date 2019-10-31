@@ -7,6 +7,7 @@ import main.model.record.RoomRecord;
 import main.model.record.TicketRecord;
 import main.model.rentable.Hall;
 import main.model.rentable.Room;
+import org.apache.commons.text.WordUtils;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -133,7 +134,7 @@ public class RecordRepository {
                     LocalDate dateOut = LocalDate.parse(token.nextToken(), dateTimeFormatter);
                     int duration = Integer.parseInt(token.nextToken());
                     String rentableName = token.nextToken();
-                    String rentableType = token.nextToken();
+                    String rentableType = WordUtils.capitalizeFully(token.nextToken());
                     double rentablePrice = Double.parseDouble(token.nextToken());
                     String rentableID = token.nextToken();
 

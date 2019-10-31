@@ -3,6 +3,7 @@ package main.data;
 import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
 import main.model.rentable.Room;
+import org.apache.commons.text.WordUtils;
 
 import java.io.*;
 import java.util.*;
@@ -84,8 +85,8 @@ public class RentableRepository {
             for (String data = br.readLine(); data != null; data = br.readLine()) {
                 StringTokenizer token = new StringTokenizer(data, ";");
 
-                String name = token.nextToken();
-                String type = token.nextToken();
+                String name = WordUtils.capitalizeFully(token.nextToken());
+                String type = WordUtils.capitalizeFully(token.nextToken());
                 double price = Double.parseDouble(token.nextToken());
                 String ID = token.nextToken();
 

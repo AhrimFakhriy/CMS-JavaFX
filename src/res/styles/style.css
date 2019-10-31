@@ -1,10 +1,10 @@
 * {
     -primary-light-color: #81D4FA;
     -primary-dark-color: #03A9F4;
-    -secondary-light-color: #B39DDB;
-    -secondary-dark-color: #673AB7;
+    -secondary-light-color: #3167BF; //#1B56B4; //#0D46A0; //#B39DDB;
+    -secondary-dark-color: #0033B4; //#002071; //#673AB7;
     -accent-light-color: #FFCC80;
-    -accent-dark-color: #FF9800;
+    -accent-dark-color: #FFA726;
 }
 
 // MAIN
@@ -13,6 +13,15 @@
     -fx-background-image: url("/res/images/background.png");
     -fx-background-repeat: no-repeat;
     -fx-border-color: black;
+}
+
+#main_window {
+    -fx-border-color: black;
+    -fx-border-width: 1px 0px 1px 0px;
+}
+
+#bookingpane {
+    -fx-background-color: white;
 }
 
 #top_toolbar {
@@ -67,13 +76,25 @@
     -jfx-checked-color: -accent-dark-color;
 }
 
+#datepicker {
+    -fx-font-size: 13px;
+    -jfx-default-color: -secondary-dark-color;
+}
+
 #toggle {
-    -jfx-toggle-color: -accent-dark-color;
+    -jfx-toggle-color: -secondary-dark-color;
 }
 
 #toggle:hover {
-    -fx-background-color: -accent-light-color;
+    -fx-text-fill: white;
+    -fx-background-color: -secondary-light-color;
 }
+
+#toggle:selected {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
 
 // ETC
 .fullsize {
@@ -81,6 +102,12 @@
     -fx-max-height: infinity;
 }
 
+.booking-top-pane {
+    -fx-background-radius: 0 0 20 0;
+    -fx-border-color: gray;
+    -fx-border-radius: 0 0 20 0;
+    -fx-border-width:  0 1 1 0;
+}
 .no-radius {
     -fx-background-radius: 0;
 }
