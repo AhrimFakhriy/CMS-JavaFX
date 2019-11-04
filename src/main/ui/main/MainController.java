@@ -17,6 +17,8 @@ import main.data.Settings;
 import main.model.person.Admin;
 import main.model.person.Employee;
 import main.model.person.Person;
+import main.model.rentable.Rentable;
+import main.ui.booking.BookingController;
 import main.ui.login.LoginView;
 import main.utils.Utils;
 
@@ -35,17 +37,22 @@ public class MainController implements Initializable {
     }
 
     private static class SubMenu {
+        private FXMLLoader loader;
         Parent root;
 
         SubMenu(URL url) {
             try {
-                FXMLLoader loader = new FXMLLoader(url);
+                loader = new FXMLLoader(url);
                 root = loader.load();
+
             }catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        <T> T getController() {
+            return loader.getController();
+        }
     }
 
     @FXML private Label labelMenu;
@@ -108,19 +115,31 @@ public class MainController implements Initializable {
         hallPieChart.getData().addAll(bookedHall, unbookedHall);
     }
 
-    @FXML private void onAction(ActionEvent event) {
+    @FXML private void onAction(ActionEvent event) throws Exception {
         if(event.getSource().equals(buttonBookRoom)) {
             if(!updateMenu(CurrentMenu.MENU_ROOM_BOOKING)) return;
+
+            labelMenu.setText("ROOM BOOKING");
+
+            if(roomBookingMenu == null) {
+                roomBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
+                ((BookingController) roomBookingMenu.getController()).setRentableType(Rentable.Type.ROOM);
+            }
+
+            panelMain.setCenter(roomBookingMenu.root);
         }
 
         if(event.getSource().equals(buttonBookHall)) {
             if(!updateMenu(CurrentMenu.MENU_HALL_BOOKING)) return;
 
-            if(hallBookingMenu == null)
-                hallBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
+            labelMenu.setText("HALL BOOKING");
 
-            Parent root = hallBookingMenu.root;
-            panelMain.setCenter(root);
+            if(hallBookingMenu == null) {
+                hallBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
+                ((BookingController) hallBookingMenu.getController()).setRentableType(Rentable.Type.HALL);
+            }
+
+            panelMain.setCenter(hallBookingMenu.root);
         }
 
         if(event.getSource().equals(buttonBookTicket)) {
@@ -138,6 +157,10 @@ public class MainController implements Initializable {
         animateDrawerClose();
     }
 
+    /**
+     * @param selectedMenu : get current selected menu
+     * @return returns false if menu did not update, true if menu is updated.
+     */
     private boolean updateMenu(CurrentMenu selectedMenu) {
         if(currentMenu == selectedMenu) return false;
 

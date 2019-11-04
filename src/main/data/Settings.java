@@ -77,17 +77,18 @@ public class Settings {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void initializeFiles() {
         try {
+            new File("src").mkdir();
             new File(DATA_FOLDER).mkdir();
             new File(LOG_FOLDER).mkdir();
 
             for(String fileName : FILE_NAMES) {
                 if(fileName.contains("removed")) {
-                    new File(LOG_FOLDER + File.separator + fileName + ".log").mkdir();
+                    new File(LOG_FOLDER + File.separator + fileName + ".log").createNewFile();
                 } else {
-                    new File(DATA_FOLDER + File.separator + fileName + ".dat").mkdir();
+                    new File(DATA_FOLDER + File.separator + fileName + ".dat").createNewFile();
                 }
             }
-        }catch (SecurityException e) {
+        }catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
     }

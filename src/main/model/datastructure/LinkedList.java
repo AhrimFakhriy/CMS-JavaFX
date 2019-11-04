@@ -29,11 +29,46 @@ public class LinkedList<T> implements Iterable<T>{
             firstNode = new Node<>(item, firstNode);
     }
 
+    public T removeFromFront() throws NullPointerException {
+        if(isEmpty()) throw new NullPointerException("Empty List!");
+
+        T removingItem = firstNode.data;
+
+        if(firstNode.equals(lastNode)) {
+            firstNode = lastNode = null;
+        } else {
+            firstNode = firstNode.next;
+        }
+
+        return removingItem;
+    }
+
     public void insertAtBack(T item) {
         if(isEmpty())
             firstNode = lastNode = new Node<>(item);
         else
             lastNode = lastNode.next = new Node<>(item);
+    }
+
+    public T removeFromBack() throws NullPointerException {
+        if(isEmpty()) throw new NullPointerException("Empty List!");
+
+        T removingItem = lastNode.data;
+
+        if(firstNode.equals(lastNode)) {
+            firstNode = lastNode = null;
+        } else {
+            Node<T> current = firstNode;
+
+            while(current.next != lastNode) {
+                current = current.next;
+            }
+
+            lastNode = current;
+            lastNode.next = null;
+        }
+
+        return removingItem;
     }
 
     public T getNext() {

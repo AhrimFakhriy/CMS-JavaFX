@@ -4,20 +4,18 @@ import main.utils.Utils;
 
 import java.time.LocalDate;
 
-public class TicketRecord {
-    private String custID;
+public class TicketRecord extends Record{
     private LocalDate date;
     private int amount;
     private double price;
 
     public TicketRecord(String custID, LocalDate date, int amount, double price) {
-        this.custID = custID;
+        super(custID);
         this.date = date;
         this.amount = amount;
         this.price = price;
     }
 
-    public String getCustID() { return custID; }
     public LocalDate getDate() { return date; }
     public int getAmount() { return amount; }
     public double getPrice() { return price; }

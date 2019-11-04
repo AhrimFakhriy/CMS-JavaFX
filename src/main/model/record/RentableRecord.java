@@ -5,26 +5,24 @@ import main.utils.Utils;
 
 import java.time.LocalDate;
 
-public abstract class RentableRecord {
-    private String custID;
+public abstract class RentableRecord extends Record{
     private LocalDate dateIn, dateOut;
     private int duration;
 
     RentableRecord(String custID, LocalDate dateIn, int duration){
-        this.custID = custID;
+        super(custID);
         this.dateIn = dateIn;
         this.duration = duration;
         dateOut = dateIn.plusDays(duration);
     }
 
     RentableRecord(String custID, LocalDate dateIn, LocalDate dateOut, int duration) {
-        this.custID = custID;
+        super(custID);
         this.dateIn = dateIn;
         this.dateOut = dateOut;
         this.duration = duration;
     }
 
-    public String getCustID() { return custID; }
     public LocalDate getDateIn() { return dateIn; }
     public LocalDate getDateOut() { return dateOut; }
     public int getDuration() { return duration; }

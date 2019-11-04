@@ -138,7 +138,7 @@ public class RecordRepository {
                     double rentablePrice = Double.parseDouble(token.nextToken());
                     String rentableID = token.nextToken();
 
-                    for (String hallTypes : rentableRepository.getHallTypes()) {
+                    for (String hallTypes : rentableRepository.hallTypesProperty().get()) {
                         if (hallTypes.equalsIgnoreCase(rentableType)) {
                             isRoom = false;
                             break;
@@ -146,7 +146,7 @@ public class RecordRepository {
                     }
 
                     if (isRoom) {
-                        for (Hall hall : rentableRepository.getHalls()) {
+                        for (Hall hall : rentableRepository.hallsProperty().get()) {
                             if (rentableID.equalsIgnoreCase(hall.getID())) {
                                 isRoom = false;
                                 break;
