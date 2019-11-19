@@ -1,6 +1,6 @@
 package main.data;
 
-import main.model.datastructure.LinkedList;
+import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.record.HallRecord;
 import main.model.record.RentableRecord;
 import main.model.record.RoomRecord;
@@ -11,7 +11,6 @@ import org.apache.commons.text.WordUtils;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import static main.utils.Utils.DATA_FOLDER;
@@ -25,15 +24,15 @@ public class RecordRepository {
     }
 
     private static RecordRepository instance;
-    private LinkedList<RentableRecord> records;
-    private LinkedList<RentableRecord> oldRecords;
-    private LinkedList<TicketRecord> ticketRecords;
+    private BinarySearchTree<String, RentableRecord> records;
+    private BinarySearchTree<String, RentableRecord> oldRecords;
+    private BinarySearchTree<String, TicketRecord> ticketRecords;
     private RentableRepository rentableRepository;
 
     private RecordRepository() {
-        records = new LinkedList<>();
-        oldRecords = new LinkedList<>();
-        ticketRecords = new LinkedList<>();
+        records = new BinarySearchTree<>();
+        oldRecords = new BinarySearchTree<>();
+        ticketRecords = new BinarySearchTree<>();
         rentableRepository = RentableRepository.getInstance();
     }
 
@@ -121,7 +120,7 @@ public class RecordRepository {
                     int amount = Integer.parseInt(token.nextToken());
                     double price = Double.parseDouble(token.nextToken());
 
-                    ticketRecords.insertAtBack(new TicketRecord(custID, date, amount, price));
+                    ticketRecords.put(custID, new TicketRecord(custID, date, amount, price));
                 }
             } else {
                 for (String data = br.readLine(); data != null; data = br.readLine()) {
@@ -167,9 +166,16 @@ public class RecordRepository {
                     }
 
                     if (type == RecordType.RECORD) {
-                        records.insertAtBack(record);
-                    } else
-                        oldRecords.insertAtBack(record);
+                        if(record instanceof HallRecord)
+                            records.put(((HallRecord) record).getHall().getID(), record);
+                        else
+                            records.put(((RoomRecord) record).getRoom().getID(), record);
+                    } else {
+                        if (record instanceof HallRecord)
+                            oldRecords.put(((HallRecord) record).getHall().getID(), record);
+                        else
+                            oldRecords.put(((RoomRecord) record).getRoom().getID(), record);
+                    }
                 }
             }
 
@@ -181,9 +187,9 @@ public class RecordRepository {
         }
     }
 
-    public LinkedList<RentableRecord> getRecords() { return records; }
-    public LinkedList<RentableRecord> getOldRecords() { return oldRecords; }
-    public LinkedList<TicketRecord> getTicketRecords() { return ticketRecords; }
+    public BinarySearchTree<String, RentableRecord> getRecords() { return records; }
+    public BinarySearchTree<String, RentableRecord> getOldRecords() { return oldRecords; }
+    public BinarySearchTree<String, TicketRecord> getTicketRecords() { return ticketRecords; }
 
     public static RecordRepository getInstance() {
         if(instance == null) {

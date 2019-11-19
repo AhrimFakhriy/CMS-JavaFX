@@ -1,47 +1,36 @@
 package main.ui.booking;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXToggleNode;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.IntegerBinding;
-import javafx.beans.binding.ListBinding;
-import javafx.beans.binding.SetBinding;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import main.data.RecordRepository;
 import main.data.RentableRepository;
 import main.model.datastructure.LinkedList;
 import main.model.datastructure.Queue;
-import main.model.datastructure.Stack;
-import main.model.rentable.Hall;
+import main.model.datastructure.binarytree.BinarySearchTree;
+import main.model.record.RentableRecord;
 import main.model.rentable.Rentable;
-import main.model.rentable.Room;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class BookingController implements Initializable {
     private static final int NUMBER_OF_BUTTONS = 40;
@@ -53,15 +42,18 @@ public class BookingController implements Initializable {
     @FXML private Label labelDuration, labelAmountSelected, labelPage;
     @FXML private GridPane buttonGrid;
     @FXML private LinkedList<JFXToggleNode> toggleButtons;
-    @FXML private JFXButton prevPageButton, nextPageButton, nextButton;
+    @FXML private JFXButton prevPageButton, nextPageButton, nextButton, clearButton;
     @FXML private JFXListView<String> selectedList;
 
+
+    private RentableRepository repository;
+    private BinarySearchTree<String, RentableRecord> records;
+
     private ListChangeListener<Rentable> itemChangeListener;
-    private Queue<Rentable> prevPageStack, currentPageStack, nextPageStack;
+    private Queue<Rentable> prevPageItems, currentPageItems, nextPageItems;
     private ObjectProperty<LocalDate> dateIn, dateOut;
     private ListProperty<Rentable> items;
     private SetProperty<String> itemTypes;
-    private RentableRepository repository;
     private Rentable.Type TYPE;
     private MapProperty<String, Rentable> selectedItems;
     private SimpleIntegerProperty currentPage, maxPage;
@@ -70,11 +62,12 @@ public class BookingController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         repository = RentableRepository.getInstance();
+        records = RecordRepository.getInstance().getRecords();
 
         selectedItems = repository.getSelectedBookings();
-        currentPageStack = new Queue<>();
-        prevPageStack = new Queue<>();
-        nextPageStack = new Queue<>();
+        currentPageItems = new Queue<>();
+        prevPageItems = new Queue<>();
+        nextPageItems = new Queue<>();
         currentPage = new SimpleIntegerProperty(0);
         maxPage = new SimpleIntegerProperty(0);
         items = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -89,12 +82,14 @@ public class BookingController implements Initializable {
         setUpListeners();
     }
 
-    private void setUpStacks() {
-        currentPageStack.clear();
-        nextPageStack.clear();
-        prevPageStack.clear();
-
-        //prevPageButton.setDisable(true);
+    @FXML private void onClearSelection() {
+        selectedItems.clear();
+        updateButtons();
+    }
+    private void setUpPageItems() {
+        currentPageItems.clear();
+        nextPageItems.clear();
+        prevPageItems.clear();
 
         FilteredList<Rentable> filteredList = items.filtered(
             r -> r.getType().equalsIgnoreCase(choiceTypeBox.getValue())
@@ -103,12 +98,12 @@ public class BookingController implements Initializable {
         int current = 0;
 
         while (current < NUMBER_OF_BUTTONS && current < filteredList.size()) {
-            currentPageStack.enqueue(filteredList.get(current));
+            currentPageItems.enqueue(filteredList.get(current));
             current++;
         }
 
         while (current < filteredList.size()) {
-            nextPageStack.enqueue(filteredList.get(current));
+            nextPageItems.enqueue(filteredList.get(current));
             current++;
         }
 
@@ -119,12 +114,14 @@ public class BookingController implements Initializable {
 
         if (currentPage.get() == 1) {
             updateButtons();
+            nextPageButton.setDisable(maxPage.get() == 1);
+
         } else {
             currentPage.set(1);
         }
     }
 
-    public void setUpListeners() {
+    private void setUpListeners() {
 
         labelPage.textProperty().bind(
             Bindings.createStringBinding(() ->
@@ -134,7 +131,7 @@ public class BookingController implements Initializable {
             )
         );
 
-        choiceTypeBox.valueProperty().addListener(((observable, oldValue, newValue) -> setUpStacks() ));
+        choiceTypeBox.valueProperty().addListener(((observable, oldValue, newValue) -> setUpPageItems() ));
 
         labelAmountSelected.textProperty().bind(count.asString());
 
@@ -152,38 +149,77 @@ public class BookingController implements Initializable {
         currentPage.addListener(((observable, oldValue, newValue) -> {
             if(oldValue.intValue() != 0) {
                 if (newValue.intValue() > oldValue.intValue()) {
-                    while (!currentPageStack.isEmpty())
-                        prevPageStack.enqueue(currentPageStack.dequeue());
+                    while (!currentPageItems.isEmpty())
+                        prevPageItems.enqueue(currentPageItems.dequeue());
 
-                    for (int i = 0; i < NUMBER_OF_BUTTONS && !nextPageStack.isEmpty(); i++)
-                        currentPageStack.enqueue(nextPageStack.dequeue());
+                    for (int i = 0; i < NUMBER_OF_BUTTONS && !nextPageItems.isEmpty(); i++)
+                        currentPageItems.enqueue(nextPageItems.dequeue());
 
                 } else {
-                        while (!currentPageStack.isEmpty())
-                            nextPageStack.enqueue(currentPageStack.dequeue());
+                    if (!prevPageItems.isEmpty()) {
+                        while (!currentPageItems.isEmpty())
+                            nextPageItems.enqueue(currentPageItems.dequeue());
 
-                        for (int i = 0; i < NUMBER_OF_BUTTONS && !prevPageStack.isEmpty(); i++)
-                            currentPageStack.enqueue(prevPageStack.dequeue());
+                        for (int i = 0; i < NUMBER_OF_BUTTONS && !prevPageItems.isEmpty(); i++)
+                            currentPageItems.enqueue(prevPageItems.dequeue());
+                    }
                 }
+
             }
 
-            nextPageButton.setDisable(nextPageStack.isEmpty());
-            prevPageButton.setDisable(prevPageStack.isEmpty());
+            nextPageButton.setDisable(nextPageItems.isEmpty());
+            prevPageButton.setDisable(prevPageItems.isEmpty());
 
             updateButtons();
         }));
+
+        selectedList.setCellFactory(param -> {
+            AtomicInteger clickCount = new AtomicInteger(0);
+
+            ListCell<String> cell = new ListCell<String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if(item != null) {
+                        HBox box = new HBox(new Label(item));
+                        setGraphic(box);
+                    }
+                }
+            };
+
+            cell.setOnMouseClicked(event -> {
+                if(cell.isEmpty())
+                    event.consume();
+                else {
+                    if(clickCount.get() != 1)
+                        clickCount.getAndIncrement();
+                    else {
+                        System.out.println(cell.itemProperty().get());
+                        clickCount.getAndSet(0);
+                    }
+                }
+
+            });
+
+            return cell;
+        });
     }
 
     private void updateButtons() {
-        Iterator<Rentable> rentableIterator = currentPageStack.iterator();
+        Iterator<Rentable> rentableIterator = currentPageItems.iterator();
         for(JFXToggleNode node : toggleButtons) {
             node.setVisible(rentableIterator.hasNext());
-            node.setDisable(!node.isVisible());
 
-            if(rentableIterator.hasNext()) {
-                node.setText(rentableIterator.next().getName());
-                node.setSelected(selectedItems.containsKey(node.getText()));
-                node.setVisible(true);
+            if(node.isVisible()) {
+                Rentable r = rentableIterator.next();
+                node.setText(r.getName());
+                node.setSelected(selectedItems.containsKey(r.getName()));
+
+                node.setDisable(records.get(r.getID()) != null);
+
+            } else {
+                node.setDisable(true);
             }
         }
     }
@@ -233,7 +269,7 @@ public class BookingController implements Initializable {
     }
 
     private String findRentableIDByName(String name) {
-        for(Rentable r : currentPageStack) {
+        for(Rentable r : currentPageItems) {
             if(r.getName().equals(name)) return r.getID();
         }
 
@@ -241,7 +277,7 @@ public class BookingController implements Initializable {
     }
 
     private Rentable findRentableByName(String name) {
-        for(Rentable r : currentPageStack) {
+        for(Rentable r : currentPageItems) {
             if(r.getName().equals(name)) return r;
         }
 
@@ -273,8 +309,18 @@ public class BookingController implements Initializable {
         pickerDateOut.setConverter(localDateStringConverter);
         pickerDateOut.setDayCellFactory(createFactory(TYPE_DATE_EXIT));
 
-        dateIn.addListener(((observable, oldValue, newValue) -> dateOut.set(newValue.plusDays(1))));
+        dateIn.addListener(((observable, oldValue, newValue) -> {
+            dateOut.set(newValue.plusDays(1));
+
+
+            labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
+        }));
+
         pickerDateIn.setValue(LocalDate.now());
+
+        dateOut.addListener(((observable, oldValue, newValue) -> {
+            labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
+        }));
 
     }
 

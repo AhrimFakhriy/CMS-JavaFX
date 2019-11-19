@@ -83,7 +83,7 @@
                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                    </rowConstraints>
-                   <JFXButton id="drawer_btn" fx:id="buttonBookRoom" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Room Booking">
+               <JFXButton id="drawer_btn" fx:id="buttonMainMenu" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="15.0" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Main Menu">
                   <font>
                      <Font name="SansSerif Bold" size="15.0" />
                   </font>
@@ -91,7 +91,7 @@
                      <Insets bottom="5.0" right="5.0" top="5.0" />
                   </GridPane.margin>
                </JFXButton>
-                   <JFXButton id="drawer_btn" fx:id="buttonBookHall" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Hall Booking" GridPane.rowIndex="1">
+                   <JFXButton id="drawer_btn" fx:id="buttonBookRoom" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Room Booking" GridPane.rowIndex="1">
                   <font>
                      <Font name="SansSerif Bold" size="15.0" />
                   </font>
@@ -99,7 +99,7 @@
                      <Insets bottom="5.0" right="5.0" top="5.0" />
                   </GridPane.margin>
                </JFXButton>
-                   <JFXButton id="drawer_btn" fx:id="buttonBookTicket" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Ticket Booking" GridPane.rowIndex="2">
+                   <JFXButton id="drawer_btn" fx:id="buttonBookHall" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Hall Booking" GridPane.rowIndex="2">
                   <font>
                      <Font name="SansSerif Bold" size="15.0" />
                   </font>
@@ -107,7 +107,7 @@
                      <Insets bottom="5.0" right="5.0" top="5.0" />
                   </GridPane.margin>
                </JFXButton>
-                   <JFXButton id="drawer_btn" fx:id="buttonCustomerDetails" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Customer Details" GridPane.rowIndex="3">
+                   <JFXButton id="drawer_btn" fx:id="buttonBookTicket" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Ticket Booking" GridPane.rowIndex="3">
                   <font>
                      <Font name="SansSerif Bold" size="15.0" />
                   </font>
@@ -115,7 +115,15 @@
                      <Insets bottom="5.0" right="5.0" top="5.0" />
                   </GridPane.margin>
                </JFXButton>
-                   <JFXButton id="drawer_btn" fx:id="buttonAdminMenu" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Admin Menu" GridPane.rowIndex="4">
+                   <JFXButton id="drawer_btn" fx:id="buttonCustomerDetails" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Customer Details" GridPane.rowIndex="4">
+                  <font>
+                     <Font name="SansSerif Bold" size="15.0" />
+                  </font>
+                  <GridPane.margin>
+                     <Insets bottom="5.0" right="5.0" top="5.0" />
+                  </GridPane.margin>
+               </JFXButton>
+                   <JFXButton id="drawer_btn" fx:id="buttonAdminMenu" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Admin Menu" GridPane.rowIndex="5">
                   <font>
                      <Font name="SansSerif Bold" size="15.0" />
                   </font>

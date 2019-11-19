@@ -29,8 +29,8 @@ public class LinkedList<T> implements Iterable<T>{
             firstNode = new Node<>(item, firstNode);
     }
 
-    public T removeFromFront() throws NullPointerException {
-        if(isEmpty()) throw new NullPointerException("Empty List!");
+    public T removeFromFront() throws UnsupportedOperationException {
+        if(isEmpty()) throw new UnsupportedOperationException("Empty List!");
 
         T removingItem = firstNode.data;
 
@@ -50,8 +50,8 @@ public class LinkedList<T> implements Iterable<T>{
             lastNode = lastNode.next = new Node<>(item);
     }
 
-    public T removeFromBack() throws NullPointerException {
-        if(isEmpty()) throw new NullPointerException("Empty List!");
+    public T removeFromBack() throws UnsupportedOperationException {
+        if(isEmpty()) throw new UnsupportedOperationException("Empty List!");
 
         T removingItem = lastNode.data;
 

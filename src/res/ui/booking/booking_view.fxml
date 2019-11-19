@@ -34,7 +34,7 @@
                   <columnConstraints>
                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
-                     <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="25.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="23.0" />
                      <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
                   </columnConstraints>
                   <rowConstraints>
@@ -61,8 +61,8 @@
                   </Label>
                   <GridPane GridPane.columnIndex="3">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="90.0" />
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="85.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -72,12 +72,12 @@
                            <Font name="SansSerif Bold" size="13.0" />
                         </font>
                      </Label>
-                     <Label fx:id="labelDuration" text="1" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
+                     <Label fx:id="labelDuration" text="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
                   </GridPane>
                   <GridPane layoutX="430.0" layoutY="10.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="90.0" />
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="85.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="15.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
@@ -87,7 +87,7 @@
                            <Font name="SansSerif Bold" size="13.0" />
                         </font>
                      </Label>
-                     <Label fx:id="labelAmountSelected" text="0" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
+                     <Label fx:id="labelAmountSelected" text="0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
                   </GridPane>
                   <JFXDatePicker id="datepicker" fx:id="pickerDateIn" defaultColor="#72a6ff" styleClass="daa" stylesheets="@../../styles/style.css" GridPane.rowIndex="1">
                      <GridPane.margin>
@@ -384,19 +384,32 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <HBox GridPane.hgrow="ALWAYS">
+                        <GridPane.margin>
+                           <Insets left="10.0" />
+                        </GridPane.margin>
+                        <children>
+                           <JFXButton id="btn" fx:id="clearButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onClearSelection" style="-fx-background-color: -accent-light-color; -fx-border-radius: 20; -fx-border-color: black; -fx-border-width: 0.5;" stylesheets="@../../styles/style.css" text="Clear Selection" HBox.hgrow="ALWAYS">
+                              <styleClass>
+                                 <String fx:value="semi-radius" />
+                                 <String fx:value="fullsize" />
+                              </styleClass>
+                              <font>
+                                 <Font name="SansSerif Bold" size="12.0" />
+                              </font>
+                           </JFXButton>
+                           <Pane HBox.hgrow="ALWAYS" />
+                        </children>
+                     </HBox>
                      <HBox alignment="CENTER" GridPane.columnIndex="2">
                         <Pane HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin></Pane>
-                        <JFXButton id="btn" fx:id="nextButton" alignment="CENTER" buttonType="RAISED" mnemonicParsing="false" style="-fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 0.5;" stylesheets="@../../styles/style.css" text="Confirm Booking" HBox.hgrow="ALWAYS">
+                        <JFXButton id="btn" fx:id="nextButton" alignment="CENTER" buttonType="RAISED" mnemonicParsing="false" style="-fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 0.5;" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Confirm Booking" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin>
-                           <styleClass>
-                              <String fx:value="semi-radius" />
-                              <String fx:value="fullsize" />
-                           </styleClass>
                            <font>
                               <Font name="SansSerif Bold" size="13.0" />
                            </font>

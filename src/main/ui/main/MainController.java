@@ -3,21 +3,35 @@ package main.ui.main;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
 import javafx.animation.*;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.data.RecordRepository;
+import main.data.RentableRepository;
 import main.data.Settings;
+import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.person.Admin;
 import main.model.person.Employee;
 import main.model.person.Person;
+import main.model.record.HallRecord;
+import main.model.record.RentableRecord;
+import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
+import main.model.rentable.Room;
 import main.ui.booking.BookingController;
 import main.ui.login.LoginView;
 import main.utils.Utils;
@@ -75,6 +89,7 @@ public class MainController implements Initializable {
 
     @FXML private JFXHamburger hamburger;
 
+    @FXML private JFXButton buttonMainMenu;
     @FXML private JFXButton buttonBookRoom;
     @FXML private JFXButton buttonBookHall;
     @FXML private JFXButton buttonBookTicket;
@@ -91,12 +106,23 @@ public class MainController implements Initializable {
     private SubMenu customerDetailsMenu;
     private SubMenu adminMenu;
 
+    private BinarySearchTree<String, RentableRecord> records;
+    private ListProperty<Hall> halls;
+    private ListProperty<Room> rooms;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        buttonMainMenu.getStyleClass().add("selected_menu");
         currentMenu = CurrentMenu.MENU_MAIN;
+
+        records = RecordRepository.getInstance().getRecords();
+        halls = RentableRepository.getInstance().hallsProperty();
+        rooms = RentableRepository.getInstance().roomsProperty();
 
         drawerBox.setVisible(false);
         animateDrawerClose();
+
+        setUpListeners();
 
         loadPieCharts();
         loadSettings();
@@ -105,17 +131,51 @@ public class MainController implements Initializable {
         onActionLogOut();
     }
 
+    private void setUpListeners() {
+
+    }
+
     private void loadPieCharts() {
-        PieChart.Data bookedRoom = new PieChart.Data("Booked", 50);
-        PieChart.Data unbookedRoom = new PieChart.Data("Unbooked",  70);
+        int bookedRoomCount = 0,
+            bookedHallCount = 0;
+
+        for(RentableRecord r : records) {
+            if(r instanceof HallRecord) {
+                bookedHallCount++;
+            } else {
+                bookedRoomCount++;
+            }
+        }
+
+        PieChart.Data bookedRoom = new PieChart.Data("Booked - " + bookedRoomCount, bookedRoomCount);
+        PieChart.Data unbookedRoom = new PieChart.Data(
+                "Available - " + (rooms.getSize()-bookedRoomCount),
+                rooms.getSize()-bookedRoomCount
+        );
+
         roomPieChart.getData().addAll(bookedRoom, unbookedRoom);
 
-        PieChart.Data bookedHall = new PieChart.Data("Booked", 5);
-        PieChart.Data unbookedHall = new PieChart.Data("Unbooked", 6);
+        PieChart.Data bookedHall = new PieChart.Data("Booked - " + bookedHallCount, bookedHallCount);
+        PieChart.Data unbookedHall = new PieChart.Data(
+                "Available - " + (halls.getSize()-bookedHallCount),
+                halls.getSize()-bookedHallCount
+        );
+
         hallPieChart.getData().addAll(bookedHall, unbookedHall);
+
+        ListProperty<PieChart.Data> chartData = new SimpleListProperty<>(FXCollections.observableArrayList());
+        chartData.addAll(bookedRoom, unbookedRoom, bookedHall, unbookedHall);
     }
 
     @FXML private void onAction(ActionEvent event) throws Exception {
+        if(event.getSource().equals(buttonMainMenu)) {
+            if(!updateMenu(CurrentMenu.MENU_MAIN)) return;
+
+            labelMenu.setText("MAIN MENU");
+
+            panelMain.setCenter(mainPane);
+        }
+
         if(event.getSource().equals(buttonBookRoom)) {
             if(!updateMenu(CurrentMenu.MENU_ROOM_BOOKING)) return;
 
@@ -179,10 +239,13 @@ public class MainController implements Initializable {
             case MENU_CUSTOMER_DETAILS:
                 currentMenuButton = buttonCustomerDetails; break;
 
-            default:
-                currentMenuButton = buttonAdminMenu;
+            case MENU_ADMIN:
+                currentMenuButton = buttonAdminMenu; break;
 
-        } // todo :: add in case for MENU_ADMIN and MENU_MAIN.
+            default:
+                currentMenuButton = buttonMainMenu;
+
+        }
 
         currentMenuButton.getStyleClass().remove("selected_menu");
 
@@ -201,9 +264,12 @@ public class MainController implements Initializable {
             case MENU_CUSTOMER_DETAILS:
                 currentMenuButton = buttonCustomerDetails; break;
 
-            default:
+            case MENU_ADMIN:
                 currentMenuButton = buttonAdminMenu; break;
-        } // todo :: add in case for MENU_ADMIN and MENU_MAIN.
+
+            default:
+                currentMenuButton = buttonMainMenu; break;
+        }
 
         currentMenuButton.getStyleClass().add("selected_menu");
 
