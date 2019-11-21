@@ -21,12 +21,13 @@ import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.record.RentableRecord;
 import main.model.rentable.Rentable;
 
-import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -41,13 +42,13 @@ public class BookingController implements Initializable {
     @FXML private ChoiceBox<String> choiceTypeBox;
     @FXML private Label labelDuration, labelAmountSelected, labelPage;
     @FXML private GridPane buttonGrid;
-    @FXML private LinkedList<JFXToggleNode> toggleButtons;
+    @FXML private List<JFXToggleNode> toggleButtons;
     @FXML private JFXButton prevPageButton, nextPageButton, nextButton, clearButton;
     @FXML private JFXListView<String> selectedList;
 
 
     private RentableRepository repository;
-    private BinarySearchTree<String, RentableRecord> records;
+    private BinarySearchTree<String, LinkedList<RentableRecord>> records;
 
     private ListChangeListener<Rentable> itemChangeListener;
     private Queue<Rentable> prevPageItems, currentPageItems, nextPageItems;
@@ -72,7 +73,7 @@ public class BookingController implements Initializable {
         maxPage = new SimpleIntegerProperty(0);
         items = new SimpleListProperty<>(FXCollections.observableArrayList());
         itemTypes = new SimpleSetProperty<>();
-        toggleButtons = new LinkedList<>();
+        toggleButtons = new ArrayList<>();
 
         count = new SimpleIntegerProperty(0);
         count.bind(selectedItems.sizeProperty());
@@ -181,9 +182,11 @@ public class BookingController implements Initializable {
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
 
-                    if(item != null) {
+                    if(item != null && !empty) {
                         HBox box = new HBox(new Label(item));
                         setGraphic(box);
+                    } else {
+                        setGraphic(new HBox());
                     }
                 }
             };
@@ -210,18 +213,32 @@ public class BookingController implements Initializable {
         Iterator<Rentable> rentableIterator = currentPageItems.iterator();
         for(JFXToggleNode node : toggleButtons) {
             node.setVisible(rentableIterator.hasNext());
+            node.setDisable(false);
 
             if(node.isVisible()) {
                 Rentable r = rentableIterator.next();
                 node.setText(r.getName());
                 node.setSelected(selectedItems.containsKey(r.getName()));
 
-                node.setDisable(records.get(r.getID()) != null);
+                LinkedList<RentableRecord> recordList = records.get(r.getID());
+
+                if(recordList != null) {
+                    for(RentableRecord record : recordList) {
+                        if(!isAvailable(record)) {
+                            node.setDisable(true);
+                            break;
+                        }
+                    }
+                }
 
             } else {
                 node.setDisable(true);
             }
         }
+    }
+
+    private boolean isAvailable(RentableRecord record) {
+        return dateIn.get().isAfter(record.getDateOut()) || dateOut.get().isBefore(record.getDateIn());
     }
 
     public void setRentableType(Rentable.Type type) throws Exception {
@@ -255,7 +272,7 @@ public class BookingController implements Initializable {
     private void setUpToggleButtons() {
         buttonGrid.getChildren()
                 .filtered(node -> node instanceof JFXToggleNode)
-                .forEach(node -> toggleButtons.insertAtBack((JFXToggleNode) node));
+                .forEach(node -> toggleButtons.add((JFXToggleNode) node));
 
         for (JFXToggleNode node : toggleButtons) {
             node.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -304,27 +321,39 @@ public class BookingController implements Initializable {
         };
 
         pickerDateIn.setConverter(localDateStringConverter);
-        pickerDateIn.setDayCellFactory(createFactory(TYPE_DATE_ENTER));
+        pickerDateIn.setDayCellFactory(createDateFactory(TYPE_DATE_ENTER));
 
         pickerDateOut.setConverter(localDateStringConverter);
-        pickerDateOut.setDayCellFactory(createFactory(TYPE_DATE_EXIT));
+        pickerDateOut.setDayCellFactory(createDateFactory(TYPE_DATE_EXIT));
 
         dateIn.addListener(((observable, oldValue, newValue) -> {
-            dateOut.set(newValue.plusDays(1));
+            if(oldValue != newValue) {
+                if(dateOut.get() == null) {
+                    dateOut.set(newValue.plusDays(1));
+                } else {
+                    if ((dateOut.get().isEqual(newValue) || dateOut.get().isAfter(newValue))) {
+                        dateOut.set(newValue.plusDays(1));
+                    }
+                }
 
+                labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
 
-            labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
+                updateButtons();
+            }
         }));
 
         pickerDateIn.setValue(LocalDate.now());
 
         dateOut.addListener(((observable, oldValue, newValue) -> {
-            labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
+            if(oldValue != newValue) {
+                labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
+                updateButtons();
+            }
         }));
 
     }
 
-    private Callback<DatePicker, DateCell> createFactory(String dateType) {
+    private Callback<DatePicker, DateCell> createDateFactory(String dateType) {
         return new Callback<DatePicker, DateCell>() {
             @Override
             public DateCell call(DatePicker param) {

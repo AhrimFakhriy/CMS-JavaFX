@@ -1,11 +1,13 @@
 package main.data;
 
+import main.model.datastructure.LinkedList;
 import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.record.HallRecord;
 import main.model.record.RentableRecord;
 import main.model.record.RoomRecord;
 import main.model.record.TicketRecord;
 import main.model.rentable.Hall;
+import main.model.rentable.Rentable;
 import main.model.rentable.Room;
 import org.apache.commons.text.WordUtils;
 
@@ -24,8 +26,8 @@ public class RecordRepository {
     }
 
     private static RecordRepository instance;
-    private BinarySearchTree<String, RentableRecord> records;
-    private BinarySearchTree<String, RentableRecord> oldRecords;
+    private BinarySearchTree<String, LinkedList<RentableRecord>> records;
+    private BinarySearchTree<String, LinkedList<RentableRecord>> oldRecords;
     private BinarySearchTree<String, TicketRecord> ticketRecords;
     private RentableRepository rentableRepository;
 
@@ -63,14 +65,20 @@ public class RecordRepository {
 
             switch (type) {
                 case RECORD:
-                    for(RentableRecord r : records)
-                        pw.println(r.toFile());
+                    for(LinkedList<RentableRecord> list : records) {
+                        for(RentableRecord r : list) {
+                            pw.println(r.toFile());
+                        }
+                    }
 
                     break;
                 case OLD_RECORD:
 
-                    for(RentableRecord r : oldRecords)
-                        pw.println(r.toFile());
+                    for(LinkedList<RentableRecord> list : oldRecords) {
+                        for(RentableRecord r : list) {
+                            pw.println(r.toFile());
+                        }
+                    }
 
                     break;
 
@@ -166,15 +174,35 @@ public class RecordRepository {
                     }
 
                     if (type == RecordType.RECORD) {
-                        if(record instanceof HallRecord)
-                            records.put(((HallRecord) record).getHall().getID(), record);
-                        else
-                            records.put(((RoomRecord) record).getRoom().getID(), record);
+                        if(record instanceof HallRecord) {
+                            if (records.get(((HallRecord) record).getHall().getID()) == null) {
+                                records.put(((HallRecord) record).getHall().getID(), new LinkedList<>());
+                            }
+
+                            records.get(((HallRecord) record).getHall().getID()).insertAtFront(record);
+
+                        } else {
+                            if (records.get(((RoomRecord) record).getRoom().getID()) == null) {
+                                records.put(((RoomRecord) record).getRoom().getID(), new LinkedList<>());
+                            }
+
+                            records.get(((RoomRecord) record).getRoom().getID()).insertAtFront(record);
+                        }
                     } else {
-                        if (record instanceof HallRecord)
-                            oldRecords.put(((HallRecord) record).getHall().getID(), record);
-                        else
-                            oldRecords.put(((RoomRecord) record).getRoom().getID(), record);
+                        if (record instanceof HallRecord) {
+                            if (oldRecords.get(((HallRecord) record).getHall().getID()) == null) {
+                                oldRecords.put(((HallRecord) record).getHall().getID(), new LinkedList<>());
+                            }
+
+                            oldRecords.get(((HallRecord) record).getHall().getID()).insertAtFront(record);
+
+                        } else {
+                            if (oldRecords.get(((RoomRecord) record).getRoom().getID()) == null) {
+                                oldRecords.put(((RoomRecord) record).getRoom().getID(), new LinkedList<>());
+                            }
+
+                            oldRecords.get(((RoomRecord) record).getRoom().getID()).insertAtFront(record);
+                        }
                     }
                 }
             }
@@ -187,8 +215,8 @@ public class RecordRepository {
         }
     }
 
-    public BinarySearchTree<String, RentableRecord> getRecords() { return records; }
-    public BinarySearchTree<String, RentableRecord> getOldRecords() { return oldRecords; }
+    public BinarySearchTree<String, LinkedList<RentableRecord>> getRecords() { return records; }
+    public BinarySearchTree<String, LinkedList<RentableRecord>> getOldRecords() { return oldRecords; }
     public BinarySearchTree<String, TicketRecord> getTicketRecords() { return ticketRecords; }
 
     public static RecordRepository getInstance() {

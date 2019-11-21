@@ -28,7 +28,7 @@ public class RentableRepository {
     private List<Hall> halls;
 
     private RentableRepository() {
-        selectedBookingsProperty = new SimpleMapProperty<>(FXCollections.observableMap(new HashMap<>()));
+        selectedBookingsProperty = new SimpleMapProperty<>(FXCollections.observableMap(new LinkedHashMap<>()));
 
         roomTypesProperty = new SimpleSetProperty<>();
         roomsProperty = new SimpleListProperty<>();

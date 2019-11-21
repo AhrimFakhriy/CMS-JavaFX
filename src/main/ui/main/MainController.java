@@ -23,6 +23,7 @@ import javafx.util.Duration;
 import main.data.RecordRepository;
 import main.data.RentableRepository;
 import main.data.Settings;
+import main.model.datastructure.LinkedList;
 import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.person.Admin;
 import main.model.person.Employee;
@@ -37,6 +38,7 @@ import main.ui.login.LoginView;
 import main.utils.Utils;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -106,7 +108,7 @@ public class MainController implements Initializable {
     private SubMenu customerDetailsMenu;
     private SubMenu adminMenu;
 
-    private BinarySearchTree<String, RentableRecord> records;
+    private BinarySearchTree<String, LinkedList<RentableRecord>> records;
     private ListProperty<Hall> halls;
     private ListProperty<Room> rooms;
 
@@ -139,13 +141,21 @@ public class MainController implements Initializable {
         int bookedRoomCount = 0,
             bookedHallCount = 0;
 
-        for(RentableRecord r : records) {
-            if(r instanceof HallRecord) {
-                bookedHallCount++;
-            } else {
-                bookedRoomCount++;
+        for(LinkedList<RentableRecord> list : records) {
+            for(RentableRecord r : list) {
+                LocalDate today = LocalDate.now();
+
+                if(today.isBefore(r.getDateOut()) || today.isAfter(r.getDateIn())) {
+                    if (r instanceof HallRecord) {
+                        bookedHallCount++;
+                    } else {
+                        bookedRoomCount++;
+                    }
+                }
             }
         }
+
+        // todo :: check for same room/hall that's booked on different dates.
 
         PieChart.Data bookedRoom = new PieChart.Data("Booked - " + bookedRoomCount, bookedRoomCount);
         PieChart.Data unbookedRoom = new PieChart.Data(
