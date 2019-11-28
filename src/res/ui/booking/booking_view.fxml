@@ -22,8 +22,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="800.0" styleClass="fullsize" stylesheets="@../../styles/style.css" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.booking.BookingController">
-   <BorderPane id="bookingpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" styleClass="bookingpane" stylesheets="@../../styles/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="800.0" styleClass="fullsize" stylesheets="@../../styles/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.booking.BookingController">
+   <BorderPane id="bookingpane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="bookingpane" stylesheets="@../../styles/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <center>
          <VBox prefHeight="200.0" prefWidth="553.0" BorderPane.alignment="CENTER">
             <AnchorPane id="pane" styleClass="booking-top-pane" stylesheets="@../../styles/style.css">
@@ -405,7 +405,8 @@
                         <Pane HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
-                           </HBox.margin></Pane>
+                           </HBox.margin>
+                        </Pane>
                         <JFXButton id="btn" fx:id="nextButton" alignment="CENTER" buttonType="RAISED" mnemonicParsing="false" style="-fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 0.5;" styleClass="fullsize" stylesheets="@../../styles/style.css" text="Confirm Booking" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets right="10.0" />
@@ -433,7 +434,8 @@
                         <Label fx:id="labelPage" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="1 / 5" textAlignment="CENTER" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="SansSerif Bold" size="14.0" />
-                           </font></Label>
+                           </font>
+                        </Label>
                         <JFXButton id="btn-no-background" fx:id="nextPageButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" styleClass="perfect-radius" stylesheets="@../../styles/style.css">
                            <graphic>
                               <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">

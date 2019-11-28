@@ -29,6 +29,10 @@
     -fx-background-color: -primary-light-color;
 }
 
+#confirm_booking_pane {
+    -fx-background-color: -accent-light-color;
+}
+
 #hamburger_menu {
     -fx-background-color: white;
 }

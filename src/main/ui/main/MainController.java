@@ -6,18 +6,14 @@ import javafx.animation.*;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.data.RecordRepository;
@@ -33,6 +29,7 @@ import main.model.record.RentableRecord;
 import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
 import main.model.rentable.Room;
+import main.model.ui.SubMenu;
 import main.ui.booking.BookingController;
 import main.ui.login.LoginView;
 import main.utils.Utils;
@@ -44,31 +41,21 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     private enum CurrentMenu {
-        MENU_MAIN,
-        MENU_HALL_BOOKING,
-        MENU_ROOM_BOOKING,
-        MENU_TICKET_BOOKING,
-        MENU_CUSTOMER_DETAILS,
-        MENU_ADMIN
-    }
+        MENU_MAIN(null),
+        MENU_HALL_BOOKING(null),
+        MENU_ROOM_BOOKING(null),
+        MENU_TICKET_BOOKING(null),
+        MENU_CUSTOMER_DETAILS(null),
+        MENU_ADMIN(null);
 
-    private static class SubMenu {
-        private FXMLLoader loader;
-        Parent root;
+        private JFXButton button;
 
-        SubMenu(URL url) {
-            try {
-                loader = new FXMLLoader(url);
-                root = loader.load();
-
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
+        CurrentMenu(JFXButton button) {
+            this.button = button;
         }
 
-        <T> T getController() {
-            return loader.getController();
-        }
+        void setButton(JFXButton button) { this.button = button; }
+        JFXButton getButton() { return button; }
     }
 
     @FXML private Label labelMenu;
@@ -115,11 +102,12 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         buttonMainMenu.getStyleClass().add("selected_menu");
-        currentMenu = CurrentMenu.MENU_MAIN;
 
         records = RecordRepository.getInstance().getRecords();
         halls = RentableRepository.getInstance().hallsProperty();
         rooms = RentableRepository.getInstance().roomsProperty();
+
+        updateMenu();
 
         drawerBox.setVisible(false);
         animateDrawerClose();
@@ -131,6 +119,17 @@ public class MainController implements Initializable {
         drawerOnClick();
 
         onActionLogOut();
+    }
+
+    private void updateMenu() {
+        CurrentMenu.MENU_MAIN.setButton(buttonMainMenu);
+        CurrentMenu.MENU_ROOM_BOOKING.setButton(buttonBookRoom);
+        CurrentMenu.MENU_HALL_BOOKING.setButton(buttonBookHall);
+        CurrentMenu.MENU_TICKET_BOOKING.setButton(buttonBookTicket);
+        CurrentMenu.MENU_CUSTOMER_DETAILS.setButton(buttonCustomerDetails);
+        CurrentMenu.MENU_ADMIN.setButton(buttonAdminMenu);
+
+        currentMenu = CurrentMenu.MENU_MAIN;
     }
 
     private void setUpListeners() {
@@ -145,7 +144,7 @@ public class MainController implements Initializable {
             for(RentableRecord r : list) {
                 LocalDate today = LocalDate.now();
 
-                if(today.isBefore(r.getDateOut()) || today.isAfter(r.getDateIn())) {
+                if(today.isBefore(r.getDateOut()) && today.isAfter(r.getDateIn())) {
                     if (r instanceof HallRecord) {
                         bookedHallCount++;
                     } else {
@@ -177,113 +176,85 @@ public class MainController implements Initializable {
         chartData.addAll(bookedRoom, unbookedRoom, bookedHall, unbookedHall);
     }
 
-    @FXML private void onAction(ActionEvent event) throws Exception {
-        if(event.getSource().equals(buttonMainMenu)) {
-            if(!updateMenu(CurrentMenu.MENU_MAIN)) return;
-
-            labelMenu.setText("MAIN MENU");
-
-            panelMain.setCenter(mainPane);
-        }
-
-        if(event.getSource().equals(buttonBookRoom)) {
-            if(!updateMenu(CurrentMenu.MENU_ROOM_BOOKING)) return;
-
-            labelMenu.setText("ROOM BOOKING");
-
-            if(roomBookingMenu == null) {
-                roomBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
-                ((BookingController) roomBookingMenu.getController()).setRentableType(Rentable.Type.ROOM);
+    @FXML private void onAction(ActionEvent event) {
+        try {
+            if (event.getSource().equals(buttonMainMenu)) {
+                updateMenu(CurrentMenu.MENU_MAIN);
             }
-
-            panelMain.setCenter(roomBookingMenu.root);
-        }
-
-        if(event.getSource().equals(buttonBookHall)) {
-            if(!updateMenu(CurrentMenu.MENU_HALL_BOOKING)) return;
-
-            labelMenu.setText("HALL BOOKING");
-
-            if(hallBookingMenu == null) {
-                hallBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
-                ((BookingController) hallBookingMenu.getController()).setRentableType(Rentable.Type.HALL);
+            else if (event.getSource().equals(buttonBookRoom)) {
+                updateMenu(CurrentMenu.MENU_ROOM_BOOKING);
             }
-
-            panelMain.setCenter(hallBookingMenu.root);
+            else if (event.getSource().equals(buttonBookHall)) {
+                updateMenu(CurrentMenu.MENU_HALL_BOOKING);
+            }
+            else if (event.getSource().equals(buttonBookTicket)) {
+                updateMenu(CurrentMenu.MENU_TICKET_BOOKING);
+            }
+            else if (event.getSource().equals(buttonCustomerDetails)) {
+                updateMenu(CurrentMenu.MENU_CUSTOMER_DETAILS);
+            }
+            else if (event.getSource().equals(buttonAdminMenu)) {
+                updateMenu(CurrentMenu.MENU_ADMIN);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            animateDrawerClose();
         }
 
-        if(event.getSource().equals(buttonBookTicket)) {
-            if(!updateMenu(CurrentMenu.MENU_TICKET_BOOKING)) return;
-        }
-
-        if(event.getSource().equals(buttonCustomerDetails)) {
-            if(!updateMenu(CurrentMenu.MENU_CUSTOMER_DETAILS)) return;
-        }
-
-        if(event.getSource().equals(buttonAdminMenu)) {
-            if(!updateMenu(CurrentMenu.MENU_ADMIN)) return;
-        }
-
-        animateDrawerClose();
     }
 
-    /**
-     * @param selectedMenu : get current selected menu
-     * @return returns false if menu did not update, true if menu is updated.
-     */
-    private boolean updateMenu(CurrentMenu selectedMenu) {
-        if(currentMenu == selectedMenu) return false;
+    private void updateMenu(CurrentMenu selectedMenu) throws Exception {
+        if(currentMenu == selectedMenu) return;
 
-        JFXButton currentMenuButton;
-
-        switch (currentMenu) {
-            case MENU_ROOM_BOOKING:
-                currentMenuButton = buttonBookRoom; break;
-
-            case MENU_HALL_BOOKING:
-                currentMenuButton = buttonBookHall; break;
-
-            case MENU_TICKET_BOOKING:
-                currentMenuButton = buttonBookTicket; break;
-
-            case MENU_CUSTOMER_DETAILS:
-                currentMenuButton = buttonCustomerDetails; break;
-
-            case MENU_ADMIN:
-                currentMenuButton = buttonAdminMenu; break;
-
-            default:
-                currentMenuButton = buttonMainMenu;
-
-        }
-
-        currentMenuButton.getStyleClass().remove("selected_menu");
-
+        drawerPane.getChildren().forEach(node -> node.getStyleClass().remove("selected_menu"));
         currentMenu = selectedMenu;
 
+
         switch (selectedMenu) {
-            case MENU_ROOM_BOOKING:
-                currentMenuButton = buttonBookRoom; break;
+            case MENU_ROOM_BOOKING: {
+                labelMenu.setText("ROOM BOOKING");
 
-            case MENU_HALL_BOOKING:
-                currentMenuButton = buttonBookHall; break;
+                if(roomBookingMenu == null) {
+                    roomBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
+                    ((BookingController) roomBookingMenu.getController()).setRentableType(Rentable.Type.ROOM);
+                    ((BookingController) roomBookingMenu.getController()).setMainStackPane(stackPane);
+                }
 
-            case MENU_TICKET_BOOKING:
-                currentMenuButton = buttonBookTicket; break;
+                panelMain.setCenter(roomBookingMenu.getRoot());
+                break;
+            }
+            case MENU_HALL_BOOKING: {
+                labelMenu.setText("HALL BOOKING");
 
-            case MENU_CUSTOMER_DETAILS:
-                currentMenuButton = buttonCustomerDetails; break;
+                if(hallBookingMenu == null) {
+                    hallBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
+                    ((BookingController) hallBookingMenu.getController()).setRentableType(Rentable.Type.HALL);
+                    ((BookingController) roomBookingMenu.getController()).setMainStackPane(stackPane);
+                }
 
-            case MENU_ADMIN:
-                currentMenuButton = buttonAdminMenu; break;
-
-            default:
-                currentMenuButton = buttonMainMenu; break;
+                panelMain.setCenter(hallBookingMenu.getRoot());
+                break;
+            }
+            case MENU_TICKET_BOOKING: {
+                labelMenu.setText("TICKET BOOKING");
+                break;
+            }
+            case MENU_CUSTOMER_DETAILS: {
+                labelMenu.setText("CUSTOMER DETAILS");
+                break;
+            }
+            case MENU_ADMIN: {
+                labelMenu.setText("ADMIN MENU");
+                break;
+            }
+            default: {
+                labelMenu.setText("MAIN MENU");
+                panelMain.setCenter(mainPane);
+            }
         }
 
-        currentMenuButton.getStyleClass().add("selected_menu");
-
-        return true;
+        currentMenu.getButton().getStyleClass().add("selected_menu");
     }
 
     private void loadSettings() {

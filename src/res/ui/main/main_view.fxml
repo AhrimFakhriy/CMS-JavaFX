@@ -61,7 +61,7 @@
                         <PieChart fx:id="hallPieChart" title="Available Halls" />
                     </VBox>
                   <effect>
-                     <InnerShadow radius="4.75" width="0.0" />
+                     <InnerShadow height="5.25" radius="0.8125" width="0.0" />
                   </effect>
                 </HBox>
             </center>

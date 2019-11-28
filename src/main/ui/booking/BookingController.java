@@ -3,14 +3,20 @@ package main.ui.booking;
 import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import main.data.RecordRepository;
@@ -20,7 +26,9 @@ import main.model.datastructure.Queue;
 import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.record.RentableRecord;
 import main.model.rentable.Rentable;
+import main.model.ui.SubMenu;
 
+import javax.management.InstanceNotFoundException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -46,6 +54,8 @@ public class BookingController implements Initializable {
     @FXML private JFXButton prevPageButton, nextPageButton, nextButton, clearButton;
     @FXML private JFXListView<String> selectedList;
 
+    private StackPane mainStackPane;
+    private SubMenu menu_Confirmation;
 
     private RentableRepository repository;
     private BinarySearchTree<String, LinkedList<RentableRecord>> records;
@@ -64,6 +74,8 @@ public class BookingController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         repository = RentableRepository.getInstance();
         records = RecordRepository.getInstance().getRecords();
+
+        menu_Confirmation = new SubMenu(getClass().getResource("/res/ui/confirm/confirm_booking.fxml"));
 
         selectedItems = repository.getSelectedBookings();
         currentPageItems = new Queue<>();
@@ -87,6 +99,7 @@ public class BookingController implements Initializable {
         selectedItems.clear();
         updateButtons();
     }
+
     private void setUpPageItems() {
         currentPageItems.clear();
         nextPageItems.clear();
@@ -144,8 +157,25 @@ public class BookingController implements Initializable {
             // todo :: check for changes in selected room, if exists, warns user or do something.
         };
 
+        nextButton.setDisable(true);
+        selectedItems.addListener((MapChangeListener<? super String, ? super Rentable>) change -> {
+            nextButton.setDisable(selectedItems.isEmpty());
+        });
+
         nextPageButton.setOnMouseClicked(e -> currentPage.set(currentPage.getValue() + 1));
         prevPageButton.setOnMouseClicked(e -> currentPage.set(currentPage.getValue() - 1));
+
+        nextButton.setOnMouseClicked(event -> {
+            try {
+                if (mainStackPane == null)
+                    throw new InstanceNotFoundException("Main Stack Pane should be initialized first! (setMainStackPane())");
+            }catch (InstanceNotFoundException error) {
+                error.printStackTrace();
+            }
+
+            JFXDialog dialog = new JFXDialog(mainStackPane, menu_Confirmation.getRoot(), JFXDialog.DialogTransition.LEFT);
+            dialog.show();
+        });
 
         currentPage.addListener(((observable, oldValue, newValue) -> {
             if(oldValue.intValue() != 0) {
@@ -239,6 +269,11 @@ public class BookingController implements Initializable {
 
     private boolean isAvailable(RentableRecord record) {
         return dateIn.get().isAfter(record.getDateOut()) || dateOut.get().isBefore(record.getDateIn());
+    }
+
+    public void setMainStackPane(StackPane pane) throws Exception {
+        if(mainStackPane != null) throw new Exception("Pane cannot be changed after initialized!");
+        mainStackPane = pane;
     }
 
     public void setRentableType(Rentable.Type type) throws Exception {
