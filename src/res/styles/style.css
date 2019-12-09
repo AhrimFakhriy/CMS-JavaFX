@@ -116,6 +116,19 @@
     -fx-max-height: infinity;
 }
 
+.table_column {
+    -fx-border-width: 0 1 0 1;
+    -fx-border-color: -primary-dark-color;
+}
+
+.column-header.table_column {
+    -fx-background-color: -primary-dark-color;
+}
+
+.column-header.table_column .label {
+    -fx-text-fill: black;
+}
+
 .booking-top-pane {
     -fx-background-radius: 0 0 20 0;
     -fx-border-color: gray;

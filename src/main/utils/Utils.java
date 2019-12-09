@@ -3,6 +3,7 @@ package main.utils;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 
 public class Utils {
@@ -15,6 +16,7 @@ public class Utils {
     public static final String LOG_FOLDER = "src/logs";
 
     public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy");
+    public static final DecimalFormat moneyFormatter = new DecimalFormat("###,###,###.00");
 
     public static final String[] FILE_NAMES = {
             "rooms",

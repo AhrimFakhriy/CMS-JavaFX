@@ -7,15 +7,25 @@ public class Customer extends Person {
     private Address address;
     private double totalSpent;
 
-    public Customer(String name, String phoneNum, String ID, String nationality, Address address, double totalSpent) {
+    public Customer(String name, String phoneNum, String ID, String nationality) {
         super(name, phoneNum);
-        this.nationality = nationality;
         this.ID = ID;
+        this.nationality = nationality;
+        this.totalSpent = 0;
+    }
+
+    public Customer(String name, String phoneNum, String ID, String nationality, Address address) {
+        this(name, phoneNum, ID, nationality);
         this.address = address;
+    }
+
+    public Customer(String name, String phoneNum, String ID, String nationality, Address address, double totalSpent) {
+        this(name, phoneNum, ID, nationality, address);
         this.totalSpent = totalSpent;
     }
 
     public void setAddress(Address address) { this.address = address; }
+    public void setNationality(String nationality) { this.nationality = nationality; }
     public void addTransaction(double price) {
         totalSpent += price;
     }
@@ -37,8 +47,8 @@ public class Customer extends Person {
     public String toFile() {
         StringBuilder out = new StringBuilder(super.getName()).append(";")
                 .append(super.getPhoneNum()).append(";")
-                .append(nationality).append(";")
-                .append(ID).append(";");
+                .append(ID).append(";")
+                .append(nationality).append(";");
 
         if(address != null)
             out.append(address.toFile()).append(";");

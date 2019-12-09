@@ -85,5 +85,5 @@ public class CustomerRepository {
         }
     }
 
-    private ArrayList<Customer> getCustomers() { return customers; }
+    public ArrayList<Customer> getCustomers() { return customers; }
 }

@@ -1,6 +1,8 @@
 package main.model.rentable;
 
-public abstract class Rentable {
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
+public abstract class Rentable extends RecursiveTreeObject<Rentable> {
     public enum Type {
         HALL,
         ROOM

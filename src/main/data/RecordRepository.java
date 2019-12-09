@@ -19,7 +19,7 @@ import static main.utils.Utils.DATA_FOLDER;
 import static main.utils.Utils.dateTimeFormatter;
 
 public class RecordRepository {
-    private enum RecordType {
+    public enum RecordType {
         RECORD,
         OLD_RECORD,
         TICKETS
@@ -42,7 +42,7 @@ public class RecordRepository {
     public void loadOldRecords() { loadData(RecordType.OLD_RECORD); }
     public void loadTicketRecords() { loadData(RecordType.TICKETS); }
 
-    private void saveData(RecordType type) {
+    public void saveRecords(RecordType type) {
         try {
             String filename;
 

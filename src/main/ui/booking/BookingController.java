@@ -4,19 +4,14 @@ import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import main.data.RecordRepository;
@@ -27,6 +22,9 @@ import main.model.datastructure.binarytree.BinarySearchTree;
 import main.model.record.RentableRecord;
 import main.model.rentable.Rentable;
 import main.model.ui.SubMenu;
+import main.ui.confirm.ConfirmBookingController;
+import main.ui.main.MainController;
+import main.ui.register.RegisterController;
 
 import javax.management.InstanceNotFoundException;
 import java.net.URL;
@@ -54,6 +52,7 @@ public class BookingController implements Initializable {
     @FXML private JFXButton prevPageButton, nextPageButton, nextButton, clearButton;
     @FXML private JFXListView<String> selectedList;
 
+    private MainController mainViewController;
     private StackPane mainStackPane;
     private SubMenu menu_Confirmation;
 
@@ -61,8 +60,8 @@ public class BookingController implements Initializable {
     private BinarySearchTree<String, LinkedList<RentableRecord>> records;
 
     private ListChangeListener<Rentable> itemChangeListener;
-    private Queue<Rentable> prevPageItems, currentPageItems, nextPageItems;
     private ObjectProperty<LocalDate> dateIn, dateOut;
+    private Queue<Rentable> prevPageItems, currentPageItems, nextPageItems;
     private ListProperty<Rentable> items;
     private SetProperty<String> itemTypes;
     private Rentable.Type TYPE;
@@ -74,8 +73,6 @@ public class BookingController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         repository = RentableRepository.getInstance();
         records = RecordRepository.getInstance().getRecords();
-
-        menu_Confirmation = new SubMenu(getClass().getResource("/res/ui/confirm/confirm_booking.fxml"));
 
         selectedItems = repository.getSelectedBookings();
         currentPageItems = new Queue<>();
@@ -158,9 +155,9 @@ public class BookingController implements Initializable {
         };
 
         nextButton.setDisable(true);
-        selectedItems.addListener((MapChangeListener<? super String, ? super Rentable>) change -> {
-            nextButton.setDisable(selectedItems.isEmpty());
-        });
+        selectedItems.addListener((MapChangeListener<? super String, ? super Rentable>) change ->
+                nextButton.setDisable(selectedItems.isEmpty())
+        );
 
         nextPageButton.setOnMouseClicked(e -> currentPage.set(currentPage.getValue() + 1));
         prevPageButton.setOnMouseClicked(e -> currentPage.set(currentPage.getValue() - 1));
@@ -173,8 +170,34 @@ public class BookingController implements Initializable {
                 error.printStackTrace();
             }
 
+            /*menu_Confirmation = new SubMenu(getClass().getResource("/res/ui/confirm/confirm_booking.fxml"));
+            JFXDialog dialog = new JFXDialog(mainStackPane, menu_Confirmation.getRoot(), JFXDialog.DialogTransition.LEFT); */
+
+            menu_Confirmation = new SubMenu(getClass().getResource("/res/ui/register/register_view.fxml"));
             JFXDialog dialog = new JFXDialog(mainStackPane, menu_Confirmation.getRoot(), JFXDialog.DialogTransition.LEFT);
+
+            ((AnchorPane) menu_Confirmation.getRoot()).setPrefSize(
+                    mainStackPane.getWidth() * 0.8,
+                    mainStackPane.getHeight() * 0.8
+            );
+
+            ChangeListener<Number> sizeChangeListener = (observable, oldValue, newValue) ->
+                ((AnchorPane) menu_Confirmation.getRoot()).setPrefSize(
+                        mainStackPane.getWidth() * 0.8,
+                        mainStackPane.getHeight() * 0.8
+            );
+
+
+            mainStackPane.heightProperty().addListener(sizeChangeListener);
+
+            ((RegisterController) menu_Confirmation.getController()).onCancellation(dialog::close);
+            ((RegisterController) menu_Confirmation.getController()).setMainViewController(mainViewController);
+            ((RegisterController) menu_Confirmation.getController()).setDialog(dialog);
+
             dialog.show();
+            dialog.setOnDialogClosed(closeEvent ->
+                mainStackPane.heightProperty().removeListener(sizeChangeListener)
+            );
         });
 
         currentPage.addListener(((observable, oldValue, newValue) -> {
@@ -239,7 +262,7 @@ public class BookingController implements Initializable {
         });
     }
 
-    private void updateButtons() {
+    public void updateButtons() {
         Iterator<Rentable> rentableIterator = currentPageItems.iterator();
         for(JFXToggleNode node : toggleButtons) {
             node.setVisible(rentableIterator.hasNext());
@@ -343,9 +366,9 @@ public class BookingController implements Initializable {
         StringConverter<LocalDate> localDateStringConverter = new StringConverter<LocalDate>() {
             private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             @Override
-            public String toString(LocalDate localdate) {
-                if(localdate == null) return "";
-                return formatter.format(localdate);
+            public String toString(LocalDate localDate) {
+                if(localDate == null) return "";
+                return formatter.format(localDate);
             }
 
             @Override
@@ -366,21 +389,25 @@ public class BookingController implements Initializable {
                 if(dateOut.get() == null) {
                     dateOut.set(newValue.plusDays(1));
                 } else {
-                    if ((dateOut.get().isEqual(newValue) || dateOut.get().isAfter(newValue))) {
+                    if ((dateOut.get().isEqual(newValue) || dateOut.get().isBefore(newValue))) {
                         dateOut.set(newValue.plusDays(1));
                     }
                 }
 
-                labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
+                repository.getDateIn().setValue(newValue);
 
+                labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
                 updateButtons();
             }
         }));
 
-        pickerDateIn.setValue(LocalDate.now());
+        pickerDateIn.setValue(repository.getDateIn().get());
+        pickerDateOut.setValue(repository.getDateOut().get());
 
         dateOut.addListener(((observable, oldValue, newValue) -> {
             if(oldValue != newValue) {
+                repository.getDateOut().setValue(newValue);
+
                 labelDuration.setText(String.valueOf(DAYS.between(dateIn.get(), dateOut.get())));
                 updateButtons();
             }
@@ -405,5 +432,9 @@ public class BookingController implements Initializable {
                 };
             }
         };
+    }
+
+    public void setMainViewController(MainController mainViewController) {
+        this.mainViewController = mainViewController;
     }
 }

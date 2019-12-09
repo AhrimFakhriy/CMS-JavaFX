@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    private enum CurrentMenu {
+    public enum CurrentMenu {
         MENU_MAIN(null),
         MENU_HALL_BOOKING(null),
         MENU_ROOM_BOOKING(null),
@@ -136,15 +136,20 @@ public class MainController implements Initializable {
 
     }
 
-    private void loadPieCharts() {
+    public void loadPieCharts() {
         int bookedRoomCount = 0,
             bookedHallCount = 0;
+
+        roomPieChart.getData().clear();
+        hallPieChart.getData().clear();
 
         for(LinkedList<RentableRecord> list : records) {
             for(RentableRecord r : list) {
                 LocalDate today = LocalDate.now();
 
-                if(today.isBefore(r.getDateOut()) && today.isAfter(r.getDateIn())) {
+                if((today.isBefore(r.getDateOut()) || today.isEqual(r.getDateOut())) &&
+                    (today.isAfter(r.getDateIn())) || today.isEqual(r.getDateIn()))
+                {
                     if (r instanceof HallRecord) {
                         bookedHallCount++;
                     } else {
@@ -204,7 +209,7 @@ public class MainController implements Initializable {
 
     }
 
-    private void updateMenu(CurrentMenu selectedMenu) throws Exception {
+    public void updateMenu(CurrentMenu selectedMenu) throws Exception {
         if(currentMenu == selectedMenu) return;
 
         drawerPane.getChildren().forEach(node -> node.getStyleClass().remove("selected_menu"));
@@ -219,6 +224,9 @@ public class MainController implements Initializable {
                     roomBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
                     ((BookingController) roomBookingMenu.getController()).setRentableType(Rentable.Type.ROOM);
                     ((BookingController) roomBookingMenu.getController()).setMainStackPane(stackPane);
+                    ((BookingController) roomBookingMenu.getController()).setMainViewController(this);
+                } else {
+                    ((BookingController) roomBookingMenu.getController()).updateButtons();
                 }
 
                 panelMain.setCenter(roomBookingMenu.getRoot());
@@ -230,7 +238,10 @@ public class MainController implements Initializable {
                 if(hallBookingMenu == null) {
                     hallBookingMenu = new SubMenu(getClass().getResource("/res/ui/booking/booking_view.fxml"));
                     ((BookingController) hallBookingMenu.getController()).setRentableType(Rentable.Type.HALL);
-                    ((BookingController) roomBookingMenu.getController()).setMainStackPane(stackPane);
+                    ((BookingController) hallBookingMenu.getController()).setMainStackPane(stackPane);
+                    ((BookingController) hallBookingMenu.getController()).setMainViewController(this);
+                } else {
+                    ((BookingController) hallBookingMenu.getController()).updateButtons();
                 }
 
                 panelMain.setCenter(hallBookingMenu.getRoot());

@@ -3,12 +3,14 @@ package main.data;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import main.model.record.RentableRecord;
 import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
 import main.model.rentable.Room;
 import org.apache.commons.text.WordUtils;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 
 import static main.utils.Utils.DATA_FOLDER;
@@ -20,6 +22,8 @@ public class RentableRepository {
     private Set<String> hallTypes, roomTypes;
 
     private MapProperty<String, Rentable> selectedBookingsProperty;
+    private ObjectProperty<LocalDate> dateIn;
+    private ObjectProperty<LocalDate> dateOut;
 
     private ListProperty<Room> roomsProperty;
     private ListProperty<Hall> hallsProperty;
@@ -29,6 +33,8 @@ public class RentableRepository {
 
     private RentableRepository() {
         selectedBookingsProperty = new SimpleMapProperty<>(FXCollections.observableMap(new LinkedHashMap<>()));
+        dateIn = new SimpleObjectProperty<>(LocalDate.now());
+        dateOut = new SimpleObjectProperty<>(LocalDate.now().plusDays(1));
 
         roomTypesProperty = new SimpleSetProperty<>();
         roomsProperty = new SimpleListProperty<>();
@@ -147,7 +153,15 @@ public class RentableRepository {
     //public Set<String> getHallTypes() { return hallTypes; }
     //public Set<String> getRoomTypes() { return roomTypes; }
 
+
+
     public MapProperty<String, Rentable> getSelectedBookings() { return selectedBookingsProperty; }
+
+    public ObjectProperty<LocalDate> getDateIn() { return dateIn; }
+    public ObjectProperty<LocalDate> getDateOut() { return dateOut; }
+
+    public void setDateIn(ObjectProperty<LocalDate> dateIn) { this.dateIn = dateIn; }
+    public void setDateOut(ObjectProperty<LocalDate>  dateOut) { this.dateOut = dateOut; }
 
     public ListProperty<Hall> hallsProperty() { return hallsProperty; }
     public ListProperty<Room> roomsProperty() { return roomsProperty; }

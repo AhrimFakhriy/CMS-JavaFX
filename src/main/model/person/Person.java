@@ -1,9 +1,9 @@
 package main.model.person;
 
-public abstract class Person {
+public class Person {
     private String name, phoneNum;
 
-    public Person(String name, String phoneNum) {
+    Person(String name, String phoneNum) {
         this.name = name;
         this.phoneNum = phoneNum;
     }
