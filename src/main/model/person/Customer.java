@@ -1,5 +1,7 @@
 package main.model.person;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
 import static main.utils.Utils.MALAYSIA;
 
 public class Customer extends Person {
@@ -45,8 +47,8 @@ public class Customer extends Person {
     public boolean isCitizen() { return nationality.equalsIgnoreCase(MALAYSIA); }
 
     public String toFile() {
-        StringBuilder out = new StringBuilder(super.getName()).append(";")
-                .append(super.getPhoneNum()).append(";")
+        StringBuilder out = new StringBuilder(name).append(";")
+                .append(phoneNum).append(";")
                 .append(ID).append(";")
                 .append(nationality).append(";");
 

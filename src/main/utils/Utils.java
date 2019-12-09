@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 public class Utils {
     public static final String CHALET_NAME = "Azimos Chalet";
     public static final String TICKET_SERVICE_LOCATION = "Pulau Perhentian";
-    public static final String MALAYSIA = "MALAYSIA";
+    public static final String MALAYSIA = "Malaysia";
 
     public static final String RESOURCE = "src";
     public static final String DATA_FOLDER = "src/data";
@@ -74,4 +74,12 @@ public class Utils {
             {"Besut", "Dungun", "Hulu Terengganu", "Kemaman", "Kuala Nerus", "Kuala Terengganu", "Marang", "Setiu", "Others"},
             {"Kuala Lumpur", "Putrajaya", "Labuan"}
     };
+
+    public static String phoneFormat(String phoneNo) {
+        return phoneNo.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2 $3");
+    }
+
+    public static String idFormat(String id) {
+        return id.replaceFirst("(\\d{6})(\\d{2})(\\d+)", "$1-$2-$3");
+    }
 }

@@ -30,8 +30,8 @@ public class Employee extends Person {
     }
 
     public String toFile() {
-        StringBuilder out = new StringBuilder(super.getName()).append(";")
-                .append(super.getPhoneNum()).append(";")
+        StringBuilder out = new StringBuilder(name).append(";")
+                .append(phoneNum).append(";")
                 .append(rank).append(";")
                 .append(salary).append(";");
 

@@ -1,7 +1,9 @@
 package main.model.person;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
 public class Person {
-    private String name, phoneNum;
+    protected String name, phoneNum;
 
     Person(String name, String phoneNum) {
         this.name = name;
