@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.apache.commons:commons-text:1.8" level="project" />
     <orderEntry type="library" name="com.jfoenix:jfoenix:8.0.9" level="project" />
+    <orderEntry type="library" name="org.controlsfx:controlsfx:8.40.16" level="project" />
   </component>
 </module>

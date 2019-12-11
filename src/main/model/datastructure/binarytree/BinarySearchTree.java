@@ -26,4 +26,5 @@ public class BinarySearchTree<K extends Comparable<K>, T> implements Iterable<T>
     public Iterator<T> iterator() {
         return new BinarySearchTreeIterator<>(root);
     }
+    public TreeNode<K, T> getRoot() { return root; }
 }

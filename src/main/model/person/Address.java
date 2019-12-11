@@ -31,11 +31,14 @@ public class Address {
         else
             address.append(street2).append(";");
 
-        return address
-                .append(postCode).append(";")
-                .append(district).append(";")
-                .append(state)
-                .toString();
+        address.append(postCode).append(";");
+
+        if(district.isEmpty())
+            address.append("null").append(";");
+        else
+            address.append(district).append(";");
+
+        return address.append(state).toString();
     }
 
     public String getStreet1() {

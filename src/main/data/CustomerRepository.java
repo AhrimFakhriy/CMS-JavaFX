@@ -72,6 +72,9 @@ public class CustomerRepository {
                     if(street2.equalsIgnoreCase("null"))
                         street2 = "";
 
+                    if(district.equalsIgnoreCase("null"))
+                        district = "";
+
                     cust.setAddress(new Address(street1, street2, postCode, district, state));
                 }
 

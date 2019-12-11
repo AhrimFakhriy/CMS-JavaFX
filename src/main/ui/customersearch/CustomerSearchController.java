@@ -3,12 +3,17 @@ package main.ui.customersearch;
 import com.jfoenix.controls.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import main.data.CustomerRepository;
 import main.model.person.Customer;
+import main.model.ui.SubMenu;
+import main.ui.customerdetails.CustomerDetailsController;
 import main.utils.Utils;
 
 import java.net.URL;
@@ -21,7 +26,11 @@ public class CustomerSearchController implements Initializable {
     @FXML private JFXButton detailButton;
     @FXML private TreeTableView<Customer> tableView;
 
+    private StackPane mainStackPane;
+
     private TreeTableColumn<Customer, String> idColumn, nameColumn, nationalityColumn, phoneColumn, spendColumn;
+
+    private SubMenu detailsMenu;
 
     private CustomerRepository repository;
     private ArrayList<Customer> customers;
@@ -37,16 +46,26 @@ public class CustomerSearchController implements Initializable {
         customers = new ArrayList<>(repository.getCustomers());
         searchingCustomers = new ArrayList<>(customers);
 
+        detailsMenu = new SubMenu(
+                getClass().getResource("/res/ui/customer_details/customer_details_view.fxml")
+        );
+
         setUpListeners();
         setUpTable();
+
+        //todo:: Handle Click for Customer Details Menu, check if data in table is selected, then show.
     }
 
     public void updateCustomers() {
         customers = new ArrayList<>(repository.getCustomers());
         searchingCustomers = new ArrayList<>(customers);
+
+        updateTableData();
     }
 
     private void setUpListeners() {
+        detailButton.setDisable(true);
+
         searchingProperty.addListener(((observable, oldValue, newValue) -> {
             String search = newValue;
 
@@ -69,6 +88,43 @@ public class CustomerSearchController implements Initializable {
 
             updateTableData();
         }));
+
+        tableView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            detailButton.setDisable(newValue == null);
+        }));
+
+        detailButton.setOnAction(event -> {
+            if(tableView.getSelectionModel().getSelectedItem() != null) {
+
+                JFXDialog dialogDetails = new JFXDialog(
+                        mainStackPane, detailsMenu.getRoot(), JFXDialog.DialogTransition.CENTER
+                );
+
+                ((AnchorPane) detailsMenu.getRoot()).setPrefSize(
+                        mainStackPane.getWidth() * 0.8,
+                        mainStackPane.getHeight() * 0.8
+                );
+
+                ChangeListener<Number> sizeChangeListener = (observable, oldValue, newValue) ->
+                        ((AnchorPane) detailsMenu.getRoot()).setPrefSize(
+                                mainStackPane.getWidth() * 0.8,
+                                mainStackPane.getHeight() * 0.8
+                );
+
+
+                mainStackPane.heightProperty().addListener(sizeChangeListener);
+
+                ((CustomerDetailsController) detailsMenu.getController()).onCancellation(dialogDetails::close);
+                ((CustomerDetailsController) detailsMenu.getController()).setCustomer(
+                        tableView.getSelectionModel().getSelectedItem().getValue()
+                );
+
+                dialogDetails.show();
+                dialogDetails.setOnDialogClosed(closeEvent ->
+                        mainStackPane.heightProperty().removeListener(sizeChangeListener)
+                );
+            }
+        });
     }
 
     private void updateTableData() {
@@ -121,7 +177,7 @@ public class CustomerSearchController implements Initializable {
         tableView.getColumns().addAll(idColumn, nameColumn, nationalityColumn, phoneColumn, spendColumn);
         tableView.setFixedCellSize(25.0);
         tableView.getColumns().forEach(column -> column.getStyleClass().add("table_column"));
-
-        updateTableData();
     }
+
+    public void setMainStackPane(StackPane mainStackPane) { this.mainStackPane = mainStackPane; }
 }

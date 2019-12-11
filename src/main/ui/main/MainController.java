@@ -30,7 +30,9 @@ import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
 import main.model.rentable.Room;
 import main.model.ui.SubMenu;
+import main.ui.admin.AdminController;
 import main.ui.booking.BookingController;
+import main.ui.customerdetails.CustomerDetailsController;
 import main.ui.customersearch.CustomerSearchController;
 import main.ui.login.LoginView;
 import main.utils.Utils;
@@ -259,6 +261,8 @@ public class MainController implements Initializable {
                     customerDetailsMenu = new SubMenu(
                         getClass().getResource("/res/ui/customer_search/customer_search_view.fxml")
                     );
+
+                    ((CustomerSearchController) customerDetailsMenu.getController()).setMainStackPane(stackPane);
                 }
 
                 ((CustomerSearchController) customerDetailsMenu.getController()).updateCustomers();
@@ -268,6 +272,15 @@ public class MainController implements Initializable {
             }
             case MENU_ADMIN: {
                 labelMenu.setText("ADMIN MENU");
+
+                if(adminMenu == null) {
+                    adminMenu = new SubMenu(getClass().getResource("/res/ui/admin/admin_view.fxml"));
+
+                    ((AdminController) adminMenu.getController()).setMainStackPane(stackPane);
+                }
+
+                panelMain.setCenter(adminMenu.getRoot());
+
                 break;
             }
             default: {

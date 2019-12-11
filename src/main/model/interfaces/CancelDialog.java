@@ -1,5 +1,5 @@
 package main.model.interfaces;
 
-public interface CancelRegistration {
+public interface CancelDialog {
         void cancel();
 }

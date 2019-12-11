@@ -17,6 +17,7 @@ public class SubMenu {
         }
     }
 
+    public <T> void setController(T controller) { loader.setController(controller); }
     public <T> T getController() {
         return loader.getController();
     }

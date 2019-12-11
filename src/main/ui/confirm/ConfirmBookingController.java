@@ -6,11 +6,8 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +21,7 @@ import main.data.RecordRepository;
 import main.data.RentableRepository;
 import main.model.datastructure.LinkedList;
 import main.model.datastructure.binarytree.BinarySearchTree;
-import main.model.interfaces.CancelRegistration;
+import main.model.interfaces.CancelDialog;
 import main.model.person.Customer;
 import main.model.record.HallRecord;
 import main.model.record.RentableRecord;
@@ -32,16 +29,14 @@ import main.model.record.RoomRecord;
 import main.model.rentable.Hall;
 import main.model.rentable.Rentable;
 import main.model.rentable.Room;
-import main.model.ui.SubMenu;
 import main.ui.main.MainController;
-import main.ui.register.RegisterController;
 import main.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -64,7 +59,7 @@ public class ConfirmBookingController implements Initializable {
     private JFXTreeTableColumn<Rentable, String> nameColumn, typeColumn, priceColumn;
     private ObservableList<Rentable> selectedItems;
 
-    private CancelRegistration cancelRegistrationHandler;
+    private CancelDialog cancelDialogHandler;
 
     private BinarySearchTree<String, LinkedList<RentableRecord>> records;
     private RecordRepository recordRepository;
@@ -133,6 +128,8 @@ public class ConfirmBookingController implements Initializable {
         cust.addTransaction(selectedItems.stream().mapToDouble(Rentable::getPrice).sum() * duration);
 
         if(!existingCust) {
+            cust.setName(WordUtils.capitalizeFully(cust.getName()));
+            cust.setNationality(WordUtils.capitalizeFully(cust.getNationality()));
             customerRepository.getCustomers().add(cust);
         }
 
@@ -228,11 +225,11 @@ public class ConfirmBookingController implements Initializable {
 
     @FXML
     private void onCancelRegistration(ActionEvent event) {
-        cancelRegistrationHandler.cancel();
+        cancelDialogHandler.cancel();
     }
 
-    public void onCancellation(CancelRegistration cancelRegistrationHandler) {
-        this.cancelRegistrationHandler = cancelRegistrationHandler;
+    public void onCancellation(CancelDialog cancelDialogHandler) {
+        this.cancelDialogHandler = cancelDialogHandler;
     }
 
     public void setMainViewController(MainController mainViewController) {

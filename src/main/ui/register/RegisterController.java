@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -15,10 +14,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import main.data.CustomerRepository;
-import main.model.interfaces.CancelRegistration;
+import main.model.interfaces.CancelDialog;
 import main.model.person.Address;
 import main.model.person.Customer;
-import main.model.person.Person;
 import main.model.ui.SubMenu;
 import main.ui.confirm.ConfirmBookingController;
 import main.ui.main.MainController;
@@ -46,7 +44,7 @@ public class RegisterController implements Initializable {
     private MainController mainViewController;
 
     private ToggleGroup citizenToggle;
-    private CancelRegistration cancelRegistrationHandler;
+    private CancelDialog cancelDialogHandler;
     private JFXDialog dialog;
 
     private CustomerRepository customerRepository;
@@ -314,11 +312,11 @@ public class RegisterController implements Initializable {
 
     @FXML
     private void onCancelRegistration(ActionEvent event) {
-        cancelRegistrationHandler.cancel();
+        cancelDialogHandler.cancel();
     }
 
-    public void onCancellation(CancelRegistration cancelRegistrationHandler) {
-        this.cancelRegistrationHandler = cancelRegistrationHandler;
+    public void onCancellation(CancelDialog cancelDialogHandler) {
+        this.cancelDialogHandler = cancelDialogHandler;
     }
 
     public void setDialog(JFXDialog dialog) {

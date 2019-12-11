@@ -20,6 +20,7 @@
         </element>
         <element id="library" level="project" name="org.apache.commons:commons-text:1.8" />
         <element id="library" level="project" name="com.jfoenix:jfoenix:8.0.9" />
+        <element id="library" level="project" name="org.controlsfx:controlsfx:8.40.16" />
       </element>
     </root>
   </artifact>
